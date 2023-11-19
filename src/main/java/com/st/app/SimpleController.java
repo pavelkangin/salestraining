@@ -55,4 +55,9 @@ public class SimpleController {
          */
         return GreetingDAO.getGreetings();
     }
+    @PostMapping("/register")
+    public Greeting registration(){
+
+        return new Greeting("Ivan","Hello!");
+    }
 }
