@@ -2,16 +2,9 @@ package com.st.app.dto;
 
 public class DefaultResponse {
 
-    private String status;
+    private int status;
     private String message;
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public String getMessage() {
         return message;
@@ -19,5 +12,13 @@ public class DefaultResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }
