@@ -44,4 +44,12 @@ public class DialogueEntry {
     public void setClient(boolean client) {
         this.client = client;
     }
+
+    public Script getScript() {
+        return script;
+    }
+
+    public void setScript(Script script) {
+        this.script = script;
+    }
 }

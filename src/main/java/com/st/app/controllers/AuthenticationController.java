@@ -30,6 +30,8 @@ public class AuthenticationController {
     public DefaultResponse authenticate(@RequestBody AuthInfo info, HttpSession session){
         AuthResponse resp=new AuthResponse();
         //TODO do user login
+
+
         return resp;
     }
 

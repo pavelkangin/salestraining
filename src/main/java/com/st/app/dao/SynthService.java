@@ -13,6 +13,7 @@ public class SynthService {
 
     public InputStream synth(String sentence){
         //TODO implement call API for synth audio from the text
+
         return null;
     }
 

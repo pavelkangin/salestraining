@@ -65,4 +65,12 @@ public class AnalyticsEntry {
     public void setRecord(String record) {
         this.record = record;
     }
+
+    public Date getLastDate() {
+        return lastDate;
+    }
+
+    public void setLastDate(Date lastDate) {
+        this.lastDate = lastDate;
+    }
 }
