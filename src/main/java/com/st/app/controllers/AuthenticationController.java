@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Calendar;
 
 @RestController
 public class AuthenticationController {
@@ -57,7 +60,14 @@ public class AuthenticationController {
     @PostMapping("/api/register")
     public User register(@RequestBody RegisterInfo info, HttpSession session){
         //TODO register new user
-
+        logger.info("User registration: " + info.getName() + "  " + info.getEmail());
+        User user = new User();
+        user.setEmail(info.getEmail());
+        user.setName(info.getName());
+        user.setPassword(info.getPassword());
+        user.setActive(false);
+        user.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(1)));
+        userService.create(user);
         /*User user=userService.authenticate("","");
         user.setWrongPassCount(user.getWrongPassCount()+1);
         userService.update(user);*/
