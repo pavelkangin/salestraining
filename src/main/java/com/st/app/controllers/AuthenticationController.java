@@ -1,6 +1,7 @@
 package com.st.app.controllers;
 
 import com.st.app.dao.MailService;
+import com.st.app.dao.RoleService;
 import com.st.app.dao.UserService;
 import com.st.app.dto.*;
 import com.st.app.model.User;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Calendar;
 
 @RestController
 public class AuthenticationController {
@@ -28,6 +28,9 @@ public class AuthenticationController {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private RoleService roleService;
 
     @PostMapping("/api/auth")
     public DefaultResponse authenticate(@RequestBody AuthInfo info, HttpSession session){
@@ -58,7 +61,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/api/register")
-    public User register(@RequestBody RegisterInfo info, HttpSession session){
+    public DefaultResponse register(@RequestBody RegisterInfo info, HttpSession session){
         //TODO register new user
         logger.info("User registration: " + info.getName() + "  " + info.getEmail());
         User user = new User();
@@ -67,15 +70,13 @@ public class AuthenticationController {
         user.setPassword(info.getPassword());
         user.setActive(false);
         user.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(1)));
+        user.setRole(roleService.getManager());
+        user.setWrongPassCount(0);
         userService.create(user);
-        /*User user=userService.authenticate("","");
-        user.setWrongPassCount(user.getWrongPassCount()+1);
-        userService.update(user);*/
-
-        //List<User> list=userService.findAll();
-        // select * from (select * from aaa) where  aaa in (select * from bbb)
-        //return list;
-        return null;
+        //mailService.send(user.getEmail(), "Ваша регистрация прошла успешно!", "Активируйте аккаунт до"+ user.getExpiryDate());
+        DefaultResponse response = new DefaultResponse();
+        response.setStatus(200);
+        response.setMessage("Registration Successfully Completed");
+        return response;
     }
-
 }
