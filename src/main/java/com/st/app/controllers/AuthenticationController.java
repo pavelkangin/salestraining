@@ -5,6 +5,7 @@ import com.st.app.dao.RoleService;
 import com.st.app.dao.UserService;
 import com.st.app.dto.*;
 import com.st.app.model.User;
+import com.st.app.model.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,21 +63,23 @@ public class AuthenticationController {
 
     @PostMapping("/api/register")
     public DefaultResponse register(@RequestBody RegisterInfo info, HttpSession session){
-        //TODO register new user
-        logger.info("User registration: " + info.getName() + "  " + info.getEmail());
-        User user = new User();
-        user.setEmail(info.getEmail());
-        user.setName(info.getName());
-        user.setPassword(info.getPassword());
-        user.setActive(false);
-        user.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(1)));
-        user.setRole(roleService.getManager());
-        user.setWrongPassCount(0);
-        userService.create(user);
-        //mailService.send(user.getEmail(), "Ваша регистрация прошла успешно!", "Активируйте аккаунт до"+ user.getExpiryDate());
         DefaultResponse response = new DefaultResponse();
-        response.setStatus(200);
-        response.setMessage("Registration Successfully Completed");
+        logger.info("User registration started: " + info.getName() + "  " + info.getEmail());
+        User user = UserMapper.toUser(info);
+        user.setRole(roleService.getManager());
+        String message = userService.validate(user);
+        if (message ==null) {
+            userService.create(user);
+            //mailService.send(user.getEmail(), "Ваша регистрация прошла успешно!", "Активируйте аккаунт до"+ user.getExpiryDate());
+            response.setStatus(200);
+            response.setMessage("Registration Successfully Completed");
+            logger.info("User registration successful: " + info.getName() + "  " + info.getEmail());
+        }
+        else {
+            response.setStatus(400);
+            response.setMessage(message);
+            logger.info("User registration failed: " + info.getName() + "  " + info.getEmail());
+        }
         return response;
     }
 }
