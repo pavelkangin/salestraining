@@ -1,6 +1,9 @@
 package com.st.app;
 
+import com.st.app.controllers.DialogueController;
 import org.postgresql.shaded.com.ongres.scram.common.util.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -19,6 +22,8 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -32,6 +37,8 @@ public class PersistenceConfig {
 
     @Autowired
     private Environment env;
+
+    Logger logger = LoggerFactory.getLogger(PersistenceConfig.class);
 
     public PersistenceConfig() {
         super();
@@ -88,6 +95,22 @@ public class PersistenceConfig {
         props.put("mail.debug", "true");
 
         return mailSender;
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer()
+    {
+        String[] allowDomains = new String[2];
+        allowDomains[0] = "http://localhost:4200";
+        allowDomains[1] = "http://localhost:8080";
+
+        logger.info("CORS configuration....");
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins(allowDomains);
+            }
+        };
     }
 
     final Properties additionalProperties() {

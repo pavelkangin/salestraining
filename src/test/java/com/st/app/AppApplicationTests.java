@@ -39,7 +39,6 @@ class AppApplicationTests {
 		newUser.setName("aaa");
 		newUser.setPassword("abc123");
 		newUser.setWrongPassCount(0);
-		newUser.setRole(roleService.getManager());
 		userService.create(newUser);
 		assertNotNull(newUser.getId());
 

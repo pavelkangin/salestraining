@@ -34,7 +34,6 @@ public class DialogueController {
     @PostMapping("/api/dialogue/fetch")
     public DialogueEntryResponse fetch(@RequestBody DialogueProgressInfo info, HttpSession session){
         //TODO return next (or first) dialogue entry as text
-
         return null;
     }
 
