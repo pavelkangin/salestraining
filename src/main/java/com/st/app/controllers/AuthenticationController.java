@@ -5,7 +5,6 @@ import com.st.app.dao.RoleService;
 import com.st.app.dao.UserService;
 import com.st.app.dto.*;
 import com.st.app.model.User;
-import com.st.app.model.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
-import java.sql.Date;
-import java.time.LocalDate;
 
 @RestController
 public class AuthenticationController {
@@ -65,7 +62,7 @@ public class AuthenticationController {
     public DefaultResponse register(@RequestBody RegisterInfo info, HttpSession session){
         DefaultResponse response = new DefaultResponse();
         logger.info("User registration started: " + info.getName() + "  " + info.getEmail());
-        User user = UserMapper.toUser(info);
+        User user = new User (info);
         user.setRole(roleService.getManager());
         String message = userService.validate(user);
         if (message ==null) {
