@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     )
     User findByEMail(@Param("email") String email);
     @Query(
-            value = "select * from users where trim(lower(email))=trim(lower(:email) and password=md5(:pass))",
+            value = "select * from users where trim(lower(email))=trim(lower(:email)) and password=md5(:pass)",
             nativeQuery = true
     )
     User findByEMailAndPassword(@Param("email") String email,@Param("pass") String pass);
