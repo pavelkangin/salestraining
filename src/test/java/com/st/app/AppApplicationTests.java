@@ -35,10 +35,12 @@ class AppApplicationTests {
 	@Disabled
 	void testCreateUser(){
 		User newUser=new User();
-		newUser.setEmail("aaa@bbb.com");
-		newUser.setName("aaa");
-		newUser.setPassword("abc123");
+		newUser.setEmail("AndreyAndreev@mail.com");
+		newUser.setName("Andrey");
+		newUser.setPassword("qwe123");
+		newUser.setActive(true);
 		newUser.setWrongPassCount(0);
+		newUser.setRole(roleService.getManager());
 		userService.create(newUser);
 		assertNotNull(newUser.getId());
 

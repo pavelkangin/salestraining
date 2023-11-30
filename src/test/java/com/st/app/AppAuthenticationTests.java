@@ -29,8 +29,8 @@ public class AppAuthenticationTests {
     @Disabled
     void testAuthenticateUser() {
         // positive AuthenticateUser test
-        String email = "peter@apple.com";
-        String password = "61bd60c60d9fb60cc8fc7767669d40a1";
+        String email = "AndreyAndreev@mail.com";
+        String password = "qwe123";
         UserInfo userInfo = userService.authenticate(email,password);
         assertNotNull(userInfo.getUser());
         assertNull(userInfo.getMessage());
@@ -42,7 +42,7 @@ public class AppAuthenticationTests {
     void testAuthenticateUserFail() {
         // negative test WrongPassCount
         User testUser = new User();
-        testUser.setEmail("aaa@bbb.com");
+        testUser.setEmail("AndreyAndreev@mail.com");
         testUser.setActive(true);
         testUser.setWrongPassCount(15);
         UserInfo userInfo = userService.validateAuthenticateUser(testUser);
