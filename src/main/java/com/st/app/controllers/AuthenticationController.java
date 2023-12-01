@@ -5,6 +5,7 @@ import com.st.app.dao.RoleService;
 import com.st.app.dao.UserService;
 import com.st.app.dto.*;
 import com.st.app.model.User;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,26 @@ public class AuthenticationController {
     private RoleService roleService;
 
     @PostMapping("/api/auth")
-    public DefaultResponse authenticate(@RequestBody AuthInfo info, HttpSession session){
-        AuthResponse resp=new AuthResponse();
-        //TODO do user login
+    public DefaultResponse authenticate(@RequestBody AuthInfo info, HttpSession session) {
+        AuthResponse resp = new AuthResponse();
+        logger.info("User authenticate started: " + info.getEmail());
+        UserInfo userInfo = userService.authenticate(info.getEmail(), info.getPassword());
 
-
+        if (userInfo.getUser() != null) {
+            session.setAttribute("user", userInfo.getUser());
+            userInfo.getUser().setWrongPassCount(0);
+            userService.update(userInfo.getUser());
+            logger.info("User authenticate completed: " + info.getEmail());
+        } else {
+            if (userInfo.getMessage() != null) {
+                resp.setStatus(-2);
+                resp.setMessage(userInfo.getMessage());
+                logger.info("User authenticate failed: " + info.getEmail() + userInfo.getMessage());
+            } else {
+                resp.setStatus(-1);
+                resp.setMessage("Wrong authentication. Check email or password.");
+            }
+        }
         return resp;
     }
 
@@ -79,4 +95,5 @@ public class AuthenticationController {
         }
         return response;
     }
+
 }
