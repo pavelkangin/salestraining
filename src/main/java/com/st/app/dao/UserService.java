@@ -33,10 +33,6 @@ public class UserService {
         }
         validateAuthenticateUser(user,userInfo);
 
-        if (userInfo.getMessage() !=null) {
-            return userInfo;
-        }
-
         User user2 = repository.findByEMailAndPassword(email, password);
 
         if (user2 == null) {
@@ -53,7 +49,6 @@ public class UserService {
     }
 
     public void validateAuthenticateUser (User user,UserInfo userInfo) {
-
 
         if (user.getEmail() == null) {
             logger.info(" 1. user == null ");
