@@ -14,7 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 
 @SpringBootTest
-class AppApplicationTests {
+class
+AppApplicationTests {
 
 
 	@Autowired

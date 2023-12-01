@@ -1,9 +1,12 @@
 package com.st.app.model;
 
+import com.st.app.dto.RegisterInfo;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity(name = "users")
 public class User implements Serializable {
@@ -39,6 +42,17 @@ public class User implements Serializable {
 
     @Column(name = "wrong_pass_count")
     private Integer wrongPassCount;
+
+    public User () {};
+
+    public User(RegisterInfo info) {
+        this.email = info.getEmail();
+        this.name = info.getName();
+        this.password = info.getPassword();
+        this.active = false;
+        this.expiryDate = Date.valueOf(LocalDate.now().plusDays(1));
+        this.wrongPassCount = 0;
+    }
 
     public Integer getId() {
         return id;

@@ -1,6 +1,7 @@
 package com.st.app.controllers;
 
 import com.st.app.dao.MailService;
+import com.st.app.dao.RoleService;
 import com.st.app.dao.UserService;
 import com.st.app.dto.*;
 import com.st.app.model.User;
@@ -25,6 +26,9 @@ public class AuthenticationController {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private RoleService roleService;
 
     @PostMapping("/api/auth")
     public DefaultResponse authenticate(@RequestBody AuthInfo info, HttpSession session){
@@ -55,17 +59,24 @@ public class AuthenticationController {
     }
 
     @PostMapping("/api/register")
-    public User register(@RequestBody RegisterInfo info, HttpSession session){
-        //TODO register new user
-
-        /*User user=userService.authenticate("","");
-        user.setWrongPassCount(user.getWrongPassCount()+1);
-        userService.update(user);*/
-
-        //List<User> list=userService.findAll();
-        // select * from (select * from aaa) where  aaa in (select * from bbb)
-        //return list;
-        return null;
+    public DefaultResponse register(@RequestBody RegisterInfo info, HttpSession session){
+        DefaultResponse response = new DefaultResponse();
+        logger.info("User registration started: " + info.getName() + "  " + info.getEmail());
+        User user = new User (info);
+        user.setRole(roleService.getManager());
+        String message = userService.validate(user);
+        if (message ==null) {
+            userService.create(user);
+            //mailService.send(user.getEmail(), "Ваша регистрация прошла успешно!", "Активируйте аккаунт до"+ user.getExpiryDate());
+            response.setStatus(200);
+            response.setMessage("Registration Successfully Completed");
+            logger.info("User registration successful: " + info.getName() + "  " + info.getEmail());
+        }
+        else {
+            response.setStatus(400);
+            response.setMessage(message);
+            logger.info("User registration failed: " + info.getName() + "  " + info.getEmail());
+        }
+        return response;
     }
-
 }
