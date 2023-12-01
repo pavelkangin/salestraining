@@ -18,7 +18,7 @@ public class UserService {
 
     @Autowired
     private UserRepository repository;
-    private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-+]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,})$";
+    private static final String EMAIL_PATTERN = "([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.[a-zA-Z0-9_-]+)";
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public User authenticate(String email,String password){
@@ -55,5 +55,9 @@ public class UserService {
             }
             return message;
         }
+
+    public void delete(Integer id) {
+        repository.deleteById(id);
     }
+}
 
