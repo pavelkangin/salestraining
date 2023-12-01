@@ -24,10 +24,14 @@ public class UserService {
 
     @Transactional
     public UserInfo authenticate(String email,String password) {
-        UserInfo userInfo; // = new UserInfo();
+        UserInfo userInfo = new UserInfo();
         User user = repository.findByEMail(email);
 
-        userInfo = validateAuthenticateUser(user);
+        if (user==null){
+            userInfo.setMessage("Неправильно введен email или пароль!");
+            return userInfo;
+        }
+        validateAuthenticateUser(user,userInfo);
 
         if (userInfo.getMessage() !=null) {
             return userInfo;
@@ -48,31 +52,31 @@ public class UserService {
         return userInfo;
     }
 
-    public UserInfo validateAuthenticateUser (User user) {
-        UserInfo userInfo = new UserInfo();
+    public void validateAuthenticateUser (User user,UserInfo userInfo) {
+
 
         if (user.getEmail() == null) {
             logger.info(" 1. user == null ");
             userInfo.setMessage("Пользователь не найден!");
-            return userInfo;
+            return ;
         }
 
         if (!user.isActive()) {
             if (user.getExpiryDate().before(Date.valueOf(LocalDate.now()))) {
                 logger.info(" 2. user !active, ExpiryDate - expired ");
                 userInfo.setMessage("Дата активации аккаунта - истекла!");
-                return userInfo;
+                return ;
             }
         }
         else {
             if (user.getWrongPassCount() > 10) {
                 logger.info(" 3. user active, WrongPassCount > 10 ");
                 userInfo.setMessage("Превышено количество попыток входа. Аккаунт заблокирован. Нажмите кнопку восстановить.");
-                return userInfo;
+                return ;
             }
             logger.info(" 4. OK - user checked ");
         }
-        return userInfo;
+        return;
     }
 
     @Transactional

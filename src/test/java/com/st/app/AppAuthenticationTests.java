@@ -41,11 +41,12 @@ public class AppAuthenticationTests {
     @Disabled
     void testAuthenticateUserFail() {
         // negative test WrongPassCount
+        UserInfo userInfo=new UserInfo();
         User testUser = new User();
         testUser.setEmail("AndreyAndreev@mail.com");
         testUser.setActive(true);
         testUser.setWrongPassCount(15);
-        UserInfo userInfo = userService.validateAuthenticateUser(testUser);
+        userService.validateAuthenticateUser(testUser,userInfo);
         assertNull(userInfo.getUser());
         assertNotNull(userInfo.getMessage());
 
