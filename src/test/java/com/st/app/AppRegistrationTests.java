@@ -8,6 +8,10 @@ import com.st.app.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.sql.Date;
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -74,5 +78,24 @@ public class AppRegistrationTests {
 
         userService.delete(newUser.getId());
     }
+    @Test
+    void registerSuccessful () {
+        RegisterInfo info = new RegisterInfo();
+        info.setEmail("AndreyAndreev@mail.com");
+        info.setPassword("qwe123");
+        info.setName("Andrey");
+        Role manager = roleService.getManager();
+        User user = new User(info);
+        user.setRole(manager);
+        String message = userService.validate(user);
+        assertNull(message);
+        userService.create(user);
+        assertNotNull(user.getId());
+        assertFalse(user.isActive());
+        assertEquals(user.getRole(), manager);
+        assertEquals(user.getExpiryDate(), Date.valueOf(LocalDate.now().plusDays(1)));
+        userService.delete(user.getId());
+    }
+
 
 }
