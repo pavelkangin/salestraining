@@ -1,4 +1,25 @@
-<p class="imp-heading">{{script.name}}</p>
+<p class="imp-heading">
+  {{script.name}}
+  <nz-rate [ngModel]="script.rate" [nzDisabled]="true" [nzCharacter]="characterIcon"></nz-rate>
+  <ng-template #characterIcon let-index>
+    <ng-container [ngSwitch]="index">
+      <span nz-icon nzType="frown" *ngSwitchCase="0"></span>
+      <span nz-icon nzType="frown" *ngSwitchCase="1"></span>
+      <span nz-icon nzType="meh" *ngSwitchCase="2"></span>
+      <span nz-icon nzType="smile" *ngSwitchCase="3"></span>
+      <span nz-icon nzType="smile" *ngSwitchCase="4"></span>
+    </ng-container>
+  </ng-template>
+  <a nz-dropdown nzTrigger="click" nzPlacement="bottomRight" [nzDropdownMenu]="menuScript" style="color: #000;float: right">
+    <span nz-icon nzType="ellipsis"></span>
+  </a>
+  <nz-dropdown-menu #menuScript="nzDropdownMenu">
+    <ul nz-menu>
+      <li nz-menu-item>Женский</li>
+      <li nz-menu-item>Мужской</li>
+    </ul>
+  </nz-dropdown-menu>
+</p>
 <p>{{script.description}}</p>
 <p>Мы будем постепенно скрывать часть подсказок в сценарии, по ходу ваших тренировок.
   Чем больше подсказок было скрыто в последних прохождениях,тем выше прогресс прохождения.

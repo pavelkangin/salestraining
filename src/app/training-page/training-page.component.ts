@@ -25,9 +25,9 @@ export class TrainingPageComponent implements OnInit{
   public showDesc= false;
   public showTrain=false;
   public scripts=[
-    {id:1,selected:true,name:'Входящие звонки',description:'Входящий звонок потенциального покупателю. Цель диалога - пригласить покупателя в офис для обсуждения задачи и заключения договора.'},
-    {id:2,selected:false,name:'Встречи',description: ''},
-    {id:3,selected:false,name:'Злобные переговоры',description: ''}
+    {id:1,selected:true,rate:3,name:'Входящие звонки',description:'Входящий звонок потенциального покупателю. Цель диалога - пригласить покупателя в офис для обсуждения задачи и заключения договора.'},
+    {id:2,selected:false,rate:3,name:'Встречи',description: ''},
+    {id:3,selected:false,rate:3,name:'Злобные переговоры',description: ''}
   ]
 
   public currentScript:any;

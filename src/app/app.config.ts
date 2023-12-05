@@ -16,7 +16,13 @@ import {
   DownOutline,
   EyeOutline,
   PauseOutline,
-  BackwardOutline
+  BackwardOutline,
+  FrownOutline,
+  MehOutline,
+  SmileOutline,
+  EllipsisOutline,
+  EyeInvisibleOutline,
+  PlayCircleOutline
 } from '@ant-design/icons-angular/icons';
 import {IconDefinition} from "@ant-design/icons-angular";
 
@@ -27,8 +33,14 @@ const icons: IconDefinition[] = [
   MailOutline,
   DownOutline,
   EyeOutline,
+  EyeInvisibleOutline,
   PauseOutline,
-  BackwardOutline
+  BackwardOutline,
+  FrownOutline,
+  MehOutline,
+  SmileOutline,
+  EllipsisOutline,
+  PlayCircleOutline
 ];
 
 

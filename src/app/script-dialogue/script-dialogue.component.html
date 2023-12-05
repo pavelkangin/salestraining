@@ -1,74 +1,30 @@
-<p class="imp-heading">{{script.name}}</p>
+<p class="imp-heading">
+  {{script.name}}
+  <nz-rate [ngModel]="script.rate" [nzDisabled]="true" [nzCharacter]="characterIcon"></nz-rate>
+  <ng-template #characterIcon let-index>
+    <ng-container [ngSwitch]="index">
+      <span nz-icon nzType="frown" *ngSwitchCase="0"></span>
+      <span nz-icon nzType="frown" *ngSwitchCase="1"></span>
+      <span nz-icon nzType="meh" *ngSwitchCase="2"></span>
+      <span nz-icon nzType="smile" *ngSwitchCase="3"></span>
+      <span nz-icon nzType="smile" *ngSwitchCase="4"></span>
+    </ng-container>
+  </ng-template>
+</p>
 <div class="imp-comment-container" [ngStyle]="{height: screenHeight+'px'}">
   <ng-scrollbar visibility="hover">
-    <div nz-row class="imp-comment-row">
-      <div nz-col nzSpan="18">
-        <span class="imp-comment-left">Алло!</span>
+    <div nz-row class="imp-comment-row" *ngFor="let d of dialogue">
+      <div nz-col nzSpan="18" [nzOffset]="d.client? 0:6" [ngClass]="{'imp-align-right':!d.client}">
+        <span [ngClass]="d.client? 'imp-comment-left' : 'imp-comment-right'">{{d.sentence}}</span>
       </div>
     </div>
-    <div nz-row class="imp-comment-row">
-      <div nz-col nzOffset="6" nzSpan="18" class="imp-align-right">
-        <span class="imp-comment-right">Здравствуйте! Меня зовут Лана, чем могу вам помочь?</span>
-      </div>
-    </div>
-    <div nz-row class="imp-comment-row">
-      <div nz-col nzSpan="18">
-        <span class="imp-comment-left">Звоню по поводу аренды квартиры в Сормово!</span>
-      </div>
-    </div>
-    <div nz-row class="imp-comment-row">
-      <div nz-col nzSpan="18">
-        <span class="imp-comment-left">Алло!</span>
-      </div>
-    </div>
-    <div nz-row class="imp-comment-row">
-      <div nz-col nzOffset="6" nzSpan="18" class="imp-align-right">
-        <span class="imp-comment-right">Здравствуйте! Меня зовут Лана, чем могу вам помочь?</span>
-      </div>
-    </div>
-    <div nz-row class="imp-comment-row">
-      <div nz-col nzSpan="18">
-        <span class="imp-comment-left">Звоню по поводу аренды квартиры в Сормово!</span>
-      </div>
-    </div>
-    <div nz-row class="imp-comment-row">
-      <div nz-col nzSpan="18">
-        <span class="imp-comment-left">Алло!</span>
-      </div>
-    </div>
-    <div nz-row class="imp-comment-row">
-      <div nz-col nzOffset="6" nzSpan="18" class="imp-align-right">
-        <span class="imp-comment-right">Здравствуйте! Меня зовут Лана, чем могу вам помочь?</span>
-      </div>
-    </div>
-    <div nz-row class="imp-comment-row">
-      <div nz-col nzSpan="18">
-        <span class="imp-comment-left">Звоню по поводу аренды квартиры в Сормово!</span>
-      </div>
-    </div>
-    <div nz-row class="imp-comment-row">
-      <div nz-col nzSpan="18">
-        <span class="imp-comment-left">Алло!</span>
-      </div>
-    </div>
-    <div nz-row class="imp-comment-row">
-      <div nz-col nzOffset="6" nzSpan="18" class="imp-align-right">
-        <span class="imp-comment-right">Здравствуйте! Меня зовут Лана, чем могу вам помочь?</span>
-      </div>
-    </div>
-    <div nz-row class="imp-comment-row">
-      <div nz-col nzSpan="18">
-        <span class="imp-comment-left">Звоню по поводу аренды квартиры в Сормово!</span>
-      </div>
-    </div>
-
   </ng-scrollbar>
 </div>
   <div class="imp-control-container" id="control-container">
   <div class="imp-control">
-    <span nz-icon nzType="eye" class="imp-control-icn-lt"></span>
-    <span class="imp-control-msg" >Хорошо, вы для себя? Хорошо, вы для себя? Хорошо, вы для себя? Хорошо, вы для себя? Хорошо, вы для себя?</span>
-    <span nz-icon nzType="pause" class="imp-control-icn-rt"></span>
+    <span nz-icon [nzType]="getEyeType()" (click)="toggleShowSent()"  class="imp-control-icn-lt"></span>
+    <span class="imp-control-msg">{{showSentence ? currentSentence.sentence : ''}}</span>
+    <span nz-icon [nzType]="getPauseType()" (click)="togglePause()" class="imp-control-icn-rt"></span>
   </div>
   <img src="assets/mic.svg" class="imp-control-btn" />
   <img src="assets/back.svg" class="imp-control-btn" (click)="showDesc()"/>

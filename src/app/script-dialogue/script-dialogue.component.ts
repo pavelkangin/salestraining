@@ -15,12 +15,14 @@ import {NzIconModule} from "ng-zorro-antd/icon";
 import { Inject }  from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import {NgScrollbar, NgScrollbarModule} from 'ngx-scrollbar';
+import {NzRateModule} from "ng-zorro-antd/rate";
+import {FormsModule} from "@angular/forms";
 
 
 @Component({
   selector: 'app-script-dialogue',
   standalone: true,
-  imports: [CommonModule, NzGridModule, NzIconModule,NgScrollbarModule],
+  imports: [CommonModule, NzGridModule, NzIconModule, NgScrollbarModule, NzRateModule, FormsModule],
   templateUrl: './script-dialogue.component.html',
   styleUrl: './script-dialogue.component.css'
 })
@@ -31,8 +33,29 @@ export class ScriptDialogueComponent implements OnInit,AfterViewInit {
   @Input('currentScript')
   set currentScript(currentScript: any) {
     this.script=currentScript;
-    console.log(this.script);
   }
+
+  public showSentence=true;
+  public paused=false;
+  public currentSentence={id:1,sentence:'Хорошо, вы для себя?',client:false}
+  public dialogue=[
+    {id:1,sentence:'Алло!',client:true},
+    {id:2,sentence:'Здравствуйте! Меня зовут Лана, чем могу вам помочь?',client:false},
+    {id:3,sentence:'Звоню по поводу аренды квартиры в Сормово!',client:true},
+    {id:1,sentence:'Алло!',client:true},
+    {id:2,sentence:'Здравствуйте! Меня зовут Лана, чем могу вам помочь?',client:false},
+    {id:3,sentence:'Звоню по поводу аренды квартиры в Сормово!',client:true},
+    {id:1,sentence:'Алло!',client:true},
+    {id:2,sentence:'Здравствуйте! Меня зовут Лана, чем могу вам помочь?',client:false},
+    {id:3,sentence:'Звоню по поводу аренды квартиры в Сормово!',client:true},
+    {id:1,sentence:'Алло!',client:true},
+    {id:2,sentence:'Здравствуйте! Меня зовут Лана, чем могу вам помочь?',client:false},
+    {id:3,sentence:'Звоню по поводу аренды квартиры в Сормово!',client:true},
+    {id:1,sentence:'Алло!',client:true},
+    {id:2,sentence:'Здравствуйте! Меня зовут Лана, чем могу вам помочь?',client:false},
+    {id:3,sentence:'Звоню по поводу аренды квартиры в Сормово!',client:true},
+  ]
+
 
   public screenHeight: any;
 
@@ -74,4 +97,19 @@ export class ScriptDialogueComponent implements OnInit,AfterViewInit {
   }
 
 
+  toggleShowSent() {
+    this.showSentence=!this.showSentence;
+  }
+
+  getEyeType() {
+    return this.showSentence?'eye-invisible':'eye';
+  }
+
+  getPauseType() {
+    return this.paused? 'play-circle' : 'pause';
+  }
+
+  togglePause() {
+    this.paused=!this.paused;
+  }
 }
