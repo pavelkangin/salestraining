@@ -1,6 +1,6 @@
 <p class="imp-heading">
   {{script.name}}
-  <nz-rate [ngModel]="script.rate" [nzDisabled]="true" [nzCharacter]="characterIcon"></nz-rate>
+  <nz-rate [ngModel]="script.rate" [nzDisabled]="true" [nzCharacter]="characterIcon" style="margin-left: 30px"></nz-rate>
   <ng-template #characterIcon let-index>
     <ng-container [ngSwitch]="index">
       <span nz-icon nzType="frown" *ngSwitchCase="0"></span>

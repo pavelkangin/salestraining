@@ -37,7 +37,7 @@ export class ScriptDialogueComponent implements OnInit,AfterViewInit {
 
   public showSentence=true;
   public paused=false;
-  public currentSentence={id:1,sentence:'Хорошо, вы для себя?',client:false}
+  public currentSentence={id:1,sentence:'Хорошо, вы для себя? Здравствуйте! Меня зовут Лана, чем могу вам помочь?',client:false}
   public dialogue=[
     {id:1,sentence:'Алло!',client:true},
     {id:2,sentence:'Здравствуйте! Меня зовут Лана, чем могу вам помочь?',client:false},
