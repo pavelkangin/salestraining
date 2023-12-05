@@ -12,7 +12,11 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import {
   UserOutline,
   LockOutline,
-  MailOutline
+  MailOutline,
+  DownOutline,
+  EyeOutline,
+  PauseOutline,
+  BackwardOutline
 } from '@ant-design/icons-angular/icons';
 import {IconDefinition} from "@ant-design/icons-angular";
 
@@ -20,7 +24,11 @@ import {IconDefinition} from "@ant-design/icons-angular";
 const icons: IconDefinition[] = [
   UserOutline,
   LockOutline,
-  MailOutline
+  MailOutline,
+  DownOutline,
+  EyeOutline,
+  PauseOutline,
+  BackwardOutline
 ];
 
 
@@ -33,7 +41,7 @@ export const appConfig: ApplicationConfig = {
     provideNzI18n(en_US),
     importProvidersFrom(FormsModule),
     importProvidersFrom(HttpClientModule),
-    importProvidersFrom(NzIconModule.forRoot(icons)),
+    importProvidersFrom(NzIconModule.forChild(icons)),
     provideAnimations()
   ]
 };

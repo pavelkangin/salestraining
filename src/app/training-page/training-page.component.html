@@ -1,0 +1,43 @@
+<nz-layout>
+  <nz-header>
+    <div nz-row>
+      <div nz-col nzSpan="6">
+        <img src="assets/logo.svg">
+      </div>
+      <div nz-col nzSpan="12" class="imp-nav-box">
+        <a href="training" class="imp-nav-link imp-nav-selected">Обучение</a>
+        <a href="analytics" class="imp-nav-link ">Аналитика</a>
+      </div>
+      <div nz-col nzSpan="6">
+        <a nz-dropdown nzTrigger="click" nzPlacement="bottomRight" [nzDropdownMenu]="menu">
+          <img src="assets/avatar.svg">
+          <span nz-icon nzType="down" style="padding-left: 5px"></span>
+        </a>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item>Профиль</li>
+            <li nz-menu-item>Поддержка</li>
+            <li nz-menu-item>История операций</li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item>Выйти</li>
+          </ul>
+        </nz-dropdown-menu>
+      </div>
+    </div>
+  </nz-header>
+  <nz-content [ngStyle]="{height: screenHeight+'px'}">
+    <div nz-row style="height: 100%">
+      <div nz-col nzOffset="3" nzSpan="4">
+        <div *ngFor="let s of scripts" class="imp-script" [ngClass]="{'imp-script-selected': s.selected}" (click)="showDescView(s)">{{s.name}}</div>
+        <!--<div class="imp-script">Встречи</div>
+        <div class="imp-script">Злобные переговоры</div>-->
+      </div>
+      <div nz-col nzSpan="14" class="imp-central">
+        <app-script-preview (startEvent)="doStartScript($event)" [currentScript]=currentScript *ngIf="showDesc"></app-script-preview>
+        <app-script-dialogue (backEvent)="doBack($event)" [currentScript]=currentScript *ngIf="showTrain"></app-script-dialogue>
+      </div>
+    </div>
+
+  </nz-content>
+</nz-layout>
+
