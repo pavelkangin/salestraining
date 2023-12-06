@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {provideRouter, withHashLocation} from '@angular/router';
 
 import { routes } from './app.routes';
 import { en_US, provideNzI18n } from 'ng-zorro-antd/i18n';
@@ -49,7 +49,7 @@ registerLocaleData(en);
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
+    provideRouter(routes,withHashLocation()),
     provideNzI18n(en_US),
     importProvidersFrom(FormsModule),
     importProvidersFrom(HttpClientModule),

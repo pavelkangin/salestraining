@@ -6,6 +6,7 @@ import {ApplyResetFormComponent} from "./apply-reset-form/apply-reset-form.compo
 import {TrainingPageComponent} from "./training-page/training-page.component";
 
 export const routes: Routes = [
+  {path:'',pathMatch:'full',redirectTo:'training'},
   {path: 'login',component: LoginFormComponent},
   {path: 'register',component: RegisterFormComponent},
   {path: 'reset',component: RequestResetFormComponent},
