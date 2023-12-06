@@ -106,4 +106,8 @@ public class UserService {
             return message;
         }
 
+    public void delete(Integer id) {
+        repository.deleteById(id);
+    }
+
 }
