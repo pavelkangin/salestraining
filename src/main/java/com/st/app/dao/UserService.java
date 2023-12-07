@@ -3,17 +3,17 @@ package com.st.app.dao;
 import com.st.app.dto.UserInfo;
 import com.st.app.model.User;
 import com.st.app.repository.UserRepository;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 @Service
@@ -29,7 +29,7 @@ public class UserService {
         UserInfo userInfo = new UserInfo();
         User user = repository.findByEMail(email);
 
-        if (user==null){
+        if (user==null) {
             userInfo.setMessage("Неправильно введен email или пароль!");
             return userInfo;
         }
@@ -44,14 +44,12 @@ public class UserService {
             userInfo.setMessage("Неправильно введен email или пароль!");
             return userInfo;
         }
-
         logger.info("6. positive case, user found ");
         userInfo.setUser(user);
         return userInfo;
     }
 
     public void validateAuthenticateUser (User user,UserInfo userInfo) {
-
         if (user.getEmail() == null) {
             logger.info(" 1. user == null ");
             userInfo.setMessage("Пользователь не найден!");
@@ -75,14 +73,62 @@ public class UserService {
         }
         return;
     }
+    public UserInfo validateUserByEmail (String email) {
+        UserInfo userInfo = new UserInfo();
+        User user = repository.findByEMail(email);
 
+        if ((user == null) || (!user.isActive()) ) {
+            logger.info(" user not found or user notActive ");
+            userInfo.setMessage("Пользователь не зарегистрирован!");
+            return userInfo;
+        }
+        userInfo.setUser(user);
+        return userInfo;
+    }
+    public UserInfo validateUserByResetCode (String reset_code) {
+        UserInfo userInfo = new UserInfo();
+        User user = repository.findByResetCode(reset_code);
+
+        if (( user == null ) || (user.getExpiryDate().before(Date.valueOf(LocalDate.now())))) {
+            logger.info(" user not found or expiry_date expired ");
+            userInfo.setMessage("Невозможно изменить пароль, попробуйте запросить его заново!");
+            return userInfo;
+        }
+        userInfo.setUser(user);
+        return userInfo;
+    }
+    public String generateResetCode () {
+        return RandomStringUtils.random(8, 48, 91, true, true);
+    }
+    public String generateUniqueResetCode () {
+        String upperCaseAlphabetAndNumbers = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuilder newCode = new StringBuilder();
+
+        for (int i = 0; i < 8; i++) {
+            char c = upperCaseAlphabetAndNumbers.charAt(random.nextInt(upperCaseAlphabetAndNumbers.length()));
+            if (i > 0) {
+                char lastChar;
+                do { c = upperCaseAlphabetAndNumbers.charAt(random.nextInt(upperCaseAlphabetAndNumbers.length()));
+                    lastChar = newCode.charAt(newCode.length() - 1);
+                } while (c == lastChar);
+            }
+            newCode.append(c);
+        }
+        return newCode.toString();
+    }
     @Transactional
     public void update(User user){
         repository.save(user);
     }
-
     @Transactional
     public void create(User user){
+        String pass=repository.encodePass(user.getPassword());
+        user.setPassword(pass);
+        repository.save(user);
+    }
+    @Transactional
+    public void saveUserWithEncodePass(User user){
         String pass=repository.encodePass(user.getPassword());
         user.setPassword(pass);
         repository.save(user);

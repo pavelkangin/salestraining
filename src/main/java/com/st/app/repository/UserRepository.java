@@ -21,6 +21,12 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     )
     User findByEMailAndPassword(@Param("email") String email,@Param("pass") String pass);
 
+    @Query(
+            value = "select * from users where trim(upper(reset_code))=trim(upper(:reset_code))",
+            nativeQuery = true
+    )
+    User findByResetCode(@Param("reset_code") String reset_code);
+
 
     @Query(
             value = "select md5(:pass)",
