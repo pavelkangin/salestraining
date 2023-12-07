@@ -3,6 +3,7 @@ package com.st.app;
 import com.st.app.dao.RoleService;
 import com.st.app.dao.UserService;
 import com.st.app.dto.RegisterInfo;
+import com.st.app.exception.BadRequestException;
 import com.st.app.model.Role;
 import com.st.app.model.User;
 import org.junit.jupiter.api.Test;
@@ -26,9 +27,9 @@ public class AppRegistrationTests {
         info.setEmail("AndreyAndreev@mail.com");
         info.setPassword("qwe123");
         User user = new User(info);
-        String message = userService.validate(user);
-        assertNotNull(message);
-        assertEquals("Имя пользователя не может быть пустым", message);
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.validate(user));
+        assertNotNull(exception.getMessage());
+        assertEquals("Имя пользователя не может быть пустым", exception.getMessage());
     }
     @Test
     void invalidRegisterInfoPassword () {
@@ -36,25 +37,25 @@ public class AppRegistrationTests {
         info.setEmail("AndreyAndreev@mail.com");
         info.setName("Andrey");
         User user = new User(info);
-        String message = userService.validate(user);
-        assertNotNull(message);
-        assertEquals("Пароль не может быть пустым", message);
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.validate(user));
+        assertNotNull(exception.getMessage());
+        assertEquals("Пароль не может быть пустым", exception.getMessage());
     }
     @Test
     void invalidRegisterInfoEmail () {
         RegisterInfo info = new RegisterInfo();
         info.setPassword("Password");
         info.setName("Andrey");
-        User user = new User(info);
-        String message = userService.validate(user);
-        assertNotNull(message);
-        assertEquals("Email не может быть пустым", message);
+        User user1 = new User(info);
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.validate(user1));
+        assertNotNull(exception.getMessage());
+        assertEquals("Email не может быть пустым", exception.getMessage());
 
         info.setEmail("AndreyAndreev@mail");
-        user = new User(info);
-        message = userService.validate(user);
-        assertNotNull(message);
-        assertEquals("Адрес почты задан в неверном формате", message);
+        User user2 = new User(info);
+        exception = assertThrows(BadRequestException.class, () -> userService.validate(user2));
+        assertNotNull(exception.getMessage());
+        assertEquals("Адрес почты задан в неверном формате", exception.getMessage());
     }
     @Test
     void registerExistingUser () {
@@ -72,9 +73,9 @@ public class AppRegistrationTests {
         info.setPassword("qwe123");
         info.setName("Andrey");
         User user = new User(info);
-        String message = userService.validate(user);
-        assertNotNull(message);
-        assertEquals("Пользователь с таким адресом уже существует", message);
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.validate(user));
+        assertNotNull(exception.getMessage());
+        assertEquals("Пользователь с таким адресом уже существует", exception.getMessage());
 
         userService.delete(newUser.getId());
     }
@@ -87,8 +88,8 @@ public class AppRegistrationTests {
         Role manager = roleService.getManager();
         User user = new User(info);
         user.setRole(manager);
-        String message = userService.validate(user);
-        assertNull(message);
+        assertDoesNotThrow(() ->userService.validate(user));
+        //assertDoesNotThrow(() ->userService.validateToken(user));
         userService.create(user);
         assertNotNull(user.getId());
         assertFalse(user.isActive());
@@ -96,6 +97,4 @@ public class AppRegistrationTests {
         assertEquals(user.getExpiryDate(), Date.valueOf(LocalDate.now().plusDays(1)));
         userService.delete(user.getId());
     }
-
-
 }

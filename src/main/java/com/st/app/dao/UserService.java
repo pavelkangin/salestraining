@@ -1,6 +1,9 @@
 package com.st.app.dao;
 
+import com.st.app.dto.TokenValidationRequest;
+import com.st.app.dto.TokenValidationResponse;
 import com.st.app.dto.UserInfo;
+import com.st.app.exception.BadRequestException;
 import com.st.app.model.User;
 import com.st.app.repository.UserRepository;
 import org.apache.logging.log4j.util.Strings;
@@ -8,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.sql.Date;
@@ -20,7 +25,11 @@ public class UserService {
 
     @Autowired
     private UserRepository repository;
+    @Autowired
+    private RestTemplate restTemplate;
     private static final String EMAIL_PATTERN = "([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.[a-zA-Z0-9_-]+)";
+    private static final String GOOGLE_RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify";
+    private static final String GOOGLE_RECAPTCHA_SECRET = "6LfQyiQpAAAAAH78rMvVA4GUIc2tY8ijP3AVeu";
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Transactional
@@ -129,27 +138,37 @@ public class UserService {
         user.setPassword(pass);
         repository.save(user);
     }
-    public String validate (User user) {
-        String message = null;
+    public void validate (User user) {
         if (Strings.isBlank(user.getName())){
-            message = "Имя пользователя не может быть пустым";
+            throw new BadRequestException("Имя пользователя не может быть пустым");
         } else if (Strings.isBlank(user.getPassword())){
-            message = "Пароль не может быть пустым";
+            throw new BadRequestException("Пароль не может быть пустым");
         } else if (Strings.isBlank(user.getEmail())){
-            message = "Email не может быть пустым";
+            throw new BadRequestException("Email не может быть пустым");
         } else if (!Pattern.compile(EMAIL_PATTERN)
                 .matcher(user.getEmail())
                 .matches()) {
-                message = "Адрес почты задан в неверном формате";
+            throw new BadRequestException("Адрес почты задан в неверном формате");
             }
             else if (repository.findByEMail(user.getEmail()) != null) {
-                message = "Пользователь с таким адресом уже существует";
+            throw new BadRequestException("Пользователь с таким адресом уже существует");
             }
-            return message;
         }
 
+    public void validateToken(String token) {
+        TokenValidationRequest request = new TokenValidationRequest();
+        request.setSecret(GOOGLE_RECAPTCHA_SECRET);
+        request.setResponse(token);
+        try {
+            TokenValidationResponse response = restTemplate.postForObject(GOOGLE_RECAPTCHA_URL, request, TokenValidationResponse.class);
+            if (response == null || !response.isSuccess()) {
+                throw new BadRequestException("Неверный токен!");
+            }
+        } catch (HttpStatusCodeException e) {
+                throw new BadRequestException("Не удалось проверить токен: " + e.getResponseBodyAsString());
+        }
+    }
     public void delete(Integer id) {
         repository.deleteById(id);
     }
-
 }

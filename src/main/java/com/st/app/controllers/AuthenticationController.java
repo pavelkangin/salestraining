@@ -139,20 +139,13 @@ public class AuthenticationController {
         logger.info("User registration started: " + info.getName() + "  " + info.getEmail());
         User user = new User (info);
         user.setRole(roleService.getManager());
-        String message = userService.validate(user);
-        if (message ==null) {
-            userService.create(user);
-            //mailService.send(user.getEmail(), "Ваша регистрация прошла успешно!", "Активируйте аккаунт до"+ user.getExpiryDate());
-            response.setStatus(200);
-            response.setMessage("Registration Successfully Completed");
-            logger.info("User registration successful: " + info.getName() + "  " + info.getEmail());
-        }
-        else {
-            response.setStatus(400);
-            response.setMessage(message);
-            logger.info("User registration failed: " + info.getName() + "  " + info.getEmail());
-        }
+        userService.validate(user);
+        userService.validateToken(info.getToken());
+        userService.create(user);
+        //mailService.send(user.getEmail(), "Ваша регистрация прошла успешно!", "Активируйте аккаунт до"+ user.getExpiryDate());
+        response.setStatus(200);
+        response.setMessage("Registration Successfully Completed");
+        logger.info("User registration successful: " + info.getName() + "  " + info.getEmail());
         return response;
     }
-
 }
