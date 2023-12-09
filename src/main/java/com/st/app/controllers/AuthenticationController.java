@@ -88,10 +88,6 @@ public class AuthenticationController {
                 resp.setStatus(-2);
                 resp.setMessage(userInfo.getMessage());
                 logger.info("User  not found: " + info.getEmail() + userInfo.getMessage());
-
-                String  emailText    = "Пользователь не найден!";
-                mailService.send(info.getEmail(), emailSubject, emailText);
-                logger.info("email with error msg sent to user " + info.getEmail());
             }
         }
         return resp;
@@ -125,9 +121,6 @@ public class AuthenticationController {
                         + info.getCode() + userInfo.getMessage());
                 resp.setStatus(-2);
                 resp.setMessage(userInfo.getMessage());
-                String  emailText    = "Пользователь не найден!";
-                mailService.send(userInfo.getUser().getEmail(), emailSubject, emailText);
-                logger.info("email with error msg sent to user " + userInfo.getUser().getEmail());
             }
         }
         return resp;

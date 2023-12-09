@@ -3,7 +3,6 @@ package com.st.app.dao;
 import com.st.app.dto.UserInfo;
 import com.st.app.model.User;
 import com.st.app.repository.UserRepository;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,9 +95,6 @@ public class UserService {
         }
         userInfo.setUser(user);
         return userInfo;
-    }
-    public String generateResetCode () {
-        return RandomStringUtils.random(8, 48, 91, true, true);
     }
     public String generateUniqueResetCode () {
         String upperCaseAlphabetAndNumbers = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
