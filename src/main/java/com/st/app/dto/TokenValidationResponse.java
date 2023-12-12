@@ -11,4 +11,8 @@ public class TokenValidationResponse {
     public String[] getError_codes() {
         return error_codes;
     }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
 }

@@ -3,17 +3,25 @@ package com.st.app;
 import com.st.app.dao.RoleService;
 import com.st.app.dao.UserService;
 import com.st.app.dto.RegisterInfo;
+import com.st.app.dto.TokenValidationRequest;
+import com.st.app.dto.TokenValidationResponse;
 import com.st.app.exception.BadRequestException;
 import com.st.app.model.Role;
 import com.st.app.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class AppRegistrationTests {
@@ -21,6 +29,8 @@ public class AppRegistrationTests {
     private UserService userService;
     @Autowired
     private RoleService roleService;
+    @MockBean
+    private RestTemplate restTemplate;
     @Test
     void invalidRegisterInfoName () {
         RegisterInfo info = new RegisterInfo();
@@ -80,16 +90,36 @@ public class AppRegistrationTests {
         userService.delete(newUser.getId());
     }
     @Test
+    void invalidToken () {
+        RegisterInfo info = new RegisterInfo();
+        info.setEmail("AndreyAndreev@mail.com");
+        info.setPassword("qwe123");
+        info.setName("Andrey");
+        info.setToken("token");
+        Role manager = roleService.getManager();
+        User user = new User(info);
+        user.setRole(manager);
+        assertDoesNotThrow(() ->userService.validate(user));
+        when(restTemplate.postForObject(anyString(),any(TokenValidationRequest.class),eq(TokenValidationResponse.class))).thenReturn(null);
+        BadRequestException exception = assertThrows(BadRequestException.class, () ->userService.validateToken(info.getToken()));
+        assertNotNull(exception.getMessage());
+        assertEquals("Неверный токен!", exception.getMessage());
+    }
+    @Test
     void registerSuccessful () {
         RegisterInfo info = new RegisterInfo();
         info.setEmail("AndreyAndreev@mail.com");
         info.setPassword("qwe123");
         info.setName("Andrey");
+        info.setToken("token");
         Role manager = roleService.getManager();
         User user = new User(info);
         user.setRole(manager);
         assertDoesNotThrow(() ->userService.validate(user));
-        //assertDoesNotThrow(() ->userService.validateToken(user));
+        TokenValidationResponse response = new TokenValidationResponse();
+        response.setSuccess(true);
+        when(restTemplate.postForObject(anyString(),any(TokenValidationRequest.class),eq(TokenValidationResponse.class))).thenReturn(response);
+        assertDoesNotThrow(() ->userService.validateToken(info.getToken()));
         userService.create(user);
         assertNotNull(user.getId());
         assertFalse(user.isActive());

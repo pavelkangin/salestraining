@@ -10,6 +10,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
@@ -27,9 +28,9 @@ public class UserService {
     private UserRepository repository;
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private Environment environment;
     private static final String EMAIL_PATTERN = "([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.[a-zA-Z0-9_-]+)";
-    private static final String GOOGLE_RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify";
-    private static final String GOOGLE_RECAPTCHA_SECRET = "6LfQyiQpAAAAAH78rMvVA4GUIc2tY8ijP3AVeu";
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Transactional
@@ -157,10 +158,10 @@ public class UserService {
 
     public void validateToken(String token) {
         TokenValidationRequest request = new TokenValidationRequest();
-        request.setSecret(GOOGLE_RECAPTCHA_SECRET);
+        request.setSecret(environment.getProperty("google.recaptcha.secret"));
         request.setResponse(token);
         try {
-            TokenValidationResponse response = restTemplate.postForObject(GOOGLE_RECAPTCHA_URL, request, TokenValidationResponse.class);
+            TokenValidationResponse response = restTemplate.postForObject(Objects.requireNonNull(environment.getProperty("google.recaptcha.url")), request, TokenValidationResponse.class);
             if (response == null || !response.isSuccess()) {
                 throw new BadRequestException("Неверный токен!");
             }
