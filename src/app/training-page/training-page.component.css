@@ -1,0 +1,87 @@
+:host {
+  text-align: center;
+}
+
+nz-header,
+nz-footer {
+  background: #ffffff;
+  height: 80px;
+  padding-top: 5px;
+}
+
+.imp-nav-box{
+  text-align: left;
+}
+
+.imp-nav-link{
+  padding-bottom: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+  color: #000;
+}
+
+.imp-nav-selected {
+  border-bottom: 2px solid #34b1f1;
+  color: #34b1f1;
+}
+
+.imp-central{
+  text-align: left;
+  background: #fff;
+  border: 1px solid #fff;
+  border-top-right-radius: 5px;
+  padding-top: 15px;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+.imp-start-btn{
+  display: block;
+  margin-top: 15px;
+  border-radius: 5px;
+  height: 50px;
+  width: 200px;
+  -webkit-box-shadow: 0px 5px 5px -5px rgba(34, 60, 80, 0.6);
+  -moz-box-shadow: 0px 5px 5px -5px rgba(34, 60, 80, 0.6);
+  box-shadow: 0px 5px 5px -5px rgba(34, 60, 80, 0.6);
+}
+
+.imp-script{
+  cursor: pointer;
+  margin-bottom: 10px;
+  padding: 20px;
+  background: #eee;
+  border: 1px solid #eee;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  text-align: left;
+  -webkit-box-shadow: -5px 5px 5px -5px rgba(34, 60, 80, 0.6);
+  -moz-box-shadow: -5px 5px 5px -5px rgba(34, 60, 80, 0.6);
+  box-shadow: -5px 5px 5px -5px rgba(34, 60, 80, 0.6);
+}
+
+.imp-heading {
+  font-size: 25px;
+
+}
+
+.imp-script-selected{
+  background: #fff;
+  border: 1px solid #fff;
+}
+
+nz-content {
+  background: rgb(192, 192, 192);
+  padding-top:20px;
+}
+
+
+
+nz-layout {
+  margin-bottom: 48px;
+}
+
+nz-layout nz-layout,
+nz-layout:last-child {
+  margin: 0;
+}
