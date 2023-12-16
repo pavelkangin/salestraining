@@ -11,7 +11,7 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler (SalesTrainingException.class)
     public ResponseEntity<DefaultResponse> handleSalesTrainingException (SalesTrainingException e){
         DefaultResponse response = new DefaultResponse();
-        response.setStatus(e.getStatus().value());
+        response.setStatus(e.getErrorCode());
         response.setMessage(e.getMessage());
         return ResponseEntity.status(e.getStatus()).body(response);
     }

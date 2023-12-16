@@ -37,7 +37,7 @@ public class AppRegistrationTests {
         info.setEmail("AndreyAndreev@mail.com");
         info.setPassword("qwe123");
         User user = new User(info);
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.validate(user));
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.validateRegisterUser(user));
         assertNotNull(exception.getMessage());
         assertEquals("Имя пользователя не может быть пустым", exception.getMessage());
     }
@@ -47,7 +47,7 @@ public class AppRegistrationTests {
         info.setEmail("AndreyAndreev@mail.com");
         info.setName("Andrey");
         User user = new User(info);
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.validate(user));
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.validateRegisterUser(user));
         assertNotNull(exception.getMessage());
         assertEquals("Пароль не может быть пустым", exception.getMessage());
     }
@@ -57,13 +57,13 @@ public class AppRegistrationTests {
         info.setPassword("Password");
         info.setName("Andrey");
         User user1 = new User(info);
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.validate(user1));
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.validateRegisterUser(user1));
         assertNotNull(exception.getMessage());
         assertEquals("Email не может быть пустым", exception.getMessage());
 
         info.setEmail("AndreyAndreev@mail");
         User user2 = new User(info);
-        exception = assertThrows(BadRequestException.class, () -> userService.validate(user2));
+        exception = assertThrows(BadRequestException.class, () -> userService.validateRegisterUser(user2));
         assertNotNull(exception.getMessage());
         assertEquals("Адрес почты задан в неверном формате", exception.getMessage());
     }
@@ -83,7 +83,7 @@ public class AppRegistrationTests {
         info.setPassword("qwe123");
         info.setName("Andrey");
         User user = new User(info);
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.validate(user));
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.validateRegisterUser(user));
         assertNotNull(exception.getMessage());
         assertEquals("Пользователь с таким адресом уже существует", exception.getMessage());
 
@@ -99,7 +99,7 @@ public class AppRegistrationTests {
         Role manager = roleService.getManager();
         User user = new User(info);
         user.setRole(manager);
-        assertDoesNotThrow(() ->userService.validate(user));
+        assertDoesNotThrow(() ->userService.validateRegisterUser(user));
         when(restTemplate.postForObject(anyString(),any(TokenValidationRequest.class),eq(TokenValidationResponse.class))).thenReturn(null);
         BadRequestException exception = assertThrows(BadRequestException.class, () ->userService.validateToken(info.getToken()));
         assertNotNull(exception.getMessage());
@@ -115,7 +115,7 @@ public class AppRegistrationTests {
         Role manager = roleService.getManager();
         User user = new User(info);
         user.setRole(manager);
-        assertDoesNotThrow(() ->userService.validate(user));
+        assertDoesNotThrow(() ->userService.validateRegisterUser(user));
         TokenValidationResponse response = new TokenValidationResponse();
         response.setSuccess(true);
         when(restTemplate.postForObject(anyString(),any(TokenValidationRequest.class),eq(TokenValidationResponse.class))).thenReturn(response);

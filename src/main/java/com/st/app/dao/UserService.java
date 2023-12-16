@@ -18,6 +18,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.transaction.Transactional;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -139,21 +141,27 @@ public class UserService {
         user.setPassword(pass);
         repository.save(user);
     }
-    public void validate (User user) {
+    public void validateRegisterUser(User user) {
         if (Strings.isBlank(user.getName())){
-            throw new BadRequestException("Имя пользователя не может быть пустым");
+            logger.info("Имя пользователя не может быть пустым");
+            throw new BadRequestException(-1,"Имя пользователя не может быть пустым");
         } else if (Strings.isBlank(user.getPassword())){
-            throw new BadRequestException("Пароль не может быть пустым");
+            logger.info("Пароль не может быть пустым");
+            throw new BadRequestException(-1,"Пароль не может быть пустым");
         } else if (Strings.isBlank(user.getEmail())){
-            throw new BadRequestException("Email не может быть пустым");
+            logger.info("Email не может быть пустым");
+            throw new BadRequestException(-1,"Email не может быть пустым");
         } else if (!Pattern.compile(EMAIL_PATTERN)
                 .matcher(user.getEmail())
                 .matches()) {
-            throw new BadRequestException("Адрес почты задан в неверном формате");
+            logger.info("Адрес почты задан в неверном формате");
+            throw new BadRequestException(-1,"Адрес почты задан в неверном формате");
             }
             else if (repository.findByEMail(user.getEmail()) != null) {
-            throw new BadRequestException("Пользователь с таким адресом уже существует");
+            logger.info("Пользователь с таким адресом уже существует");
+            throw new BadRequestException(-1,"Пользователь с таким адресом уже существует");
             }
+            logger.info(" 2. user !active, ExpiryDate - expired ");
         }
 
     public void validateToken(String token) {
@@ -161,13 +169,17 @@ public class UserService {
         request.setSecret(environment.getProperty("google.recaptcha.secret"));
         request.setResponse(token);
         try {
-            TokenValidationResponse response = restTemplate.postForObject(Objects.requireNonNull(environment.getProperty("google.recaptcha.url")), request, TokenValidationResponse.class);
+            TokenValidationResponse response =
+                    restTemplate.postForObject(Objects.requireNonNull(environment.getProperty("google.recaptcha.url")), request, TokenValidationResponse.class);
             if (response == null || !response.isSuccess()) {
-                throw new BadRequestException("Неверный токен!");
+                logger.info("Неверный токен "+ (response==null ?"ответ пустой":Arrays.toString(response.getError_codes())));
+                throw new BadRequestException(-1,"Неверный токен!");
             }
         } catch (HttpStatusCodeException e) {
-                throw new BadRequestException("Не удалось проверить токен: " + e.getResponseBodyAsString());
+                logger.info("Возникло исключение во время проверки токена "+e.getResponseBodyAsString());
+                throw new BadRequestException(-1,"Не удалось проверить токен: " + e.getResponseBodyAsString());
         }
+        logger.info("Проверка токена прошла успешно");
     }
     public void delete(Integer id) {
         repository.deleteById(id);
