@@ -45,7 +45,7 @@ public class ProfileController {
 
     @PostMapping("/api/profile/avatar/upload")
     public DefaultResponse uploadAvatar(@RequestParam("image") MultipartFile image, HttpSession session) {
-        //TODO resize and save to the directory avatar image
+        //resize and save to the directory avatar image
         DefaultResponse resp = new DefaultResponse();
         logger.info("uploadAvatar started");
         User user = (User) session.getAttribute("user");
@@ -56,7 +56,6 @@ public class ProfileController {
             logger.info("uploadAvatar. empty user in session, not authenticated");
             return resp;
         }
-        // валидный ли, по email из базы
         if (userService.validateUserByEmail(user.getEmail()).getUser() == null) {
             resp.setStatus(-1);
             resp.setMessage("Пользователь не валидирован!");
@@ -65,7 +64,7 @@ public class ProfileController {
         }
 
         try {
-            File avatarFile = imageService.resize(image.getInputStream(), user.getAvatarContentType(), 512, 512);
+            File avatarFile = imageService.resize(image.getInputStream(), image.getContentType(), 512, 512);
             logger.info("Avatar file saved on server");
             user.setAvatarContentType(image.getContentType());
             user.setAvatarFile(avatarFile.getName());
@@ -74,13 +73,16 @@ public class ProfileController {
             resp.setMessage("Avatar успешно загружен.");
 
         } catch (Exception e) {
-            logger.error("error in uploadAvatar");
+            logger.info("got exception in uploadAvatar");
+            logger.error(e.getMessage());
         }
         return resp;
     }
     @GetMapping("/api/profile/avatar")
     public void getAvatar (HttpSession session, HttpServletResponse response) {
-        File errorFile = new File("src/main/resources/static/images/oops_640x129.jpeg");
+        //upload user avatar image into user profile
+        logger.info("getAvatar started");
+        File errorFile = new File(Constants.avatarPath + "/" + "mock_avatar.jpeg");
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
@@ -91,32 +93,20 @@ public class ProfileController {
 
         try {
             if (user.getAvatarFile() == null) {
-                // response.setStatus(404);
                 logger.info("getAvatar. user property avatar File is null");
                 sendResponse(response, 404, user.getAvatarContentType(), errorFile);
             } else {
                 File avatarFile = new File(Constants.avatarPath + "/" + user.getAvatarFile());
                 if (!avatarFile.exists()) {
-                    //  response.setStatus(404);
                     logger.info("getAvatar. user avatar File doesn't exist on disk");
                     sendResponse(response, 404, user.getAvatarContentType(), errorFile);
                 } else {
-                   /* response.setContentType(user.getAvatarContentType());
-                    //   response.setHeader("Content-type",user.getAvatarContentType());
-                    FileInputStream fis = new FileInputStream(avatarFile);
-                    OutputStream oos = response.getOutputStream();
-                    IOUtils.copyLarge(fis, oos);
-                    fis.close();
-                    oos.flush();
-                    oos.close();*/
                     sendResponse(response, 200, user.getAvatarContentType(), avatarFile);
                 }
             }
         } catch (Exception e) {
-            //response.getWriter().println("Error");
             logger.info("got exception in getAvatar");
             logger.error(e.getMessage());
-            //response.setContentType(user.getAvatarContentType());
             try {
                 sendResponse(response, 404, user.getAvatarContentType(), errorFile);
             } catch (Exception ex) { }
