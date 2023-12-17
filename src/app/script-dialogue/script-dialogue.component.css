@@ -75,3 +75,19 @@
   bottom: 13px;
   left:0;
 }
+
+.imp-progress {
+  margin-left: 10px;
+  margin-right: 10px;
+  display: block;
+}
+
+.imp-timer{
+  font-size: 14px;
+  display: inline-block;
+  margin-left: 10px;
+  background: #4A8BDF;
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: #fff;
+}

@@ -19,7 +19,7 @@ import {NzRateModule} from "ng-zorro-antd/rate";
 import {FormsModule} from "@angular/forms";
 import { AudioRecordingService } from "../audio-recording.service";
 import {DomSanitizer} from "@angular/platform-browser";
-
+import { NzProgressModule } from 'ng-zorro-antd/progress';
 
 interface RecordedAudioOutput {
   blob: Blob;
@@ -29,7 +29,7 @@ interface RecordedAudioOutput {
 @Component({
   selector: 'app-script-dialogue',
   standalone: true,
-  imports: [CommonModule, NzGridModule, NzIconModule, NgScrollbarModule, NzRateModule, FormsModule],
+  imports: [CommonModule, NzGridModule, NzIconModule, NgScrollbarModule, NzRateModule, FormsModule,NzProgressModule],
   templateUrl: './script-dialogue.component.html',
   styleUrl: './script-dialogue.component.css'
 })
@@ -43,6 +43,7 @@ export class ScriptDialogueComponent implements OnInit,AfterViewInit,OnDestroy {
   }
 
   public showSentence=true;
+  public started=false;
   public paused=false;
   public currentSentence={id:1,sentence:'Хорошо, вы для себя? Здравствуйте! Меня зовут Лана, чем могу вам помочь?',client:false}
   public dialogue=[
@@ -125,14 +126,6 @@ export class ScriptDialogueComponent implements OnInit,AfterViewInit,OnDestroy {
     return this.showSentence?'eye-invisible':'eye';
   }
 
-  getPauseType() {
-    return this.paused? 'play-circle' : 'pause';
-  }
-
-  togglePause() {
-    this.paused=!this.paused;
-  }
-
   isRecording = false;
   recordedTime='00:00';
   //blobUrl:any;
@@ -176,10 +169,5 @@ export class ScriptDialogueComponent implements OnInit,AfterViewInit,OnDestroy {
   ngOnDestroy(): void {
     this.abortRecording();
   }
-
-
-
-
-
 
 }
