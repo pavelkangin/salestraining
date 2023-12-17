@@ -10,6 +10,7 @@
       <span nz-icon nzType="smile" *ngSwitchCase="4"></span>
     </ng-container>
   </ng-template>
+  <span style="font-size: 14px;float: right"> {{recordedTime}} </span>
 </p>
 <div class="imp-comment-container" [ngStyle]="{height: screenHeight+'px'}">
   <ng-scrollbar visibility="hover">
@@ -21,12 +22,14 @@
   </ng-scrollbar>
 </div>
   <div class="imp-control-container" id="control-container">
-  <div class="imp-control">
-    <span nz-icon [nzType]="getEyeType()" (click)="toggleShowSent()"  class="imp-control-icn-lt"></span>
-    <span class="imp-control-msg">{{showSentence ? currentSentence.sentence : ''}}</span>
-    <span nz-icon [nzType]="getPauseType()" (click)="togglePause()" class="imp-control-icn-rt"></span>
+  <div class="imp-control" >
+    <div nz-row>
+      <div nz-col nzSpan="3"><span nz-icon [nzType]="getEyeType()" (click)="toggleShowSent()"  class="imp-control-icn-lt"></span></div>
+      <div nz-col nzSpan="20"><span class="imp-control-msg">{{showSentence ? currentSentence.sentence : ''}}</span></div>
+    </div>
+    <!--<span nz-icon [nzType]="getPauseType()" (click)="togglePause()" class="imp-control-icn-rt"></span>-->
   </div>
-  <img src="assets/mic.svg" class="imp-control-btn" />
+  <img [src]="isRecording ? 'assets/mic_on.svg' : 'assets/mic.svg'" class="imp-control-btn" (click)="startRecording()"/>
   <img src="assets/back.svg" class="imp-control-btn" (click)="showDesc()"/>
 </div>
 
