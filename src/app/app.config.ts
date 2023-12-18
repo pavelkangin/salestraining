@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -15,6 +15,9 @@ import {
   MailOutline
 } from '@ant-design/icons-angular/icons';
 import {IconDefinition} from "@ant-design/icons-angular";
+
+
+
 
 
 const icons: IconDefinition[] = [
