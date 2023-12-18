@@ -1,17 +1,25 @@
 package com.st.app.dao;
 
+import com.st.app.dto.TokenValidationRequest;
+import com.st.app.dto.TokenValidationResponse;
 import com.st.app.dto.UserInfo;
+import com.st.app.exception.BadRequestException;
 import com.st.app.model.User;
 import com.st.app.repository.UserRepository;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -20,6 +28,10 @@ public class UserService {
 
     @Autowired
     private UserRepository repository;
+    @Autowired
+    private RestTemplate restTemplate;
+    @Autowired
+    private Environment environment;
     private static final String EMAIL_PATTERN = "([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.[a-zA-Z0-9_-]+)";
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -129,27 +141,47 @@ public class UserService {
         user.setPassword(pass);
         repository.save(user);
     }
-    public String validate (User user) {
-        String message = null;
+    public void validateRegisterUser(User user) {
         if (Strings.isBlank(user.getName())){
-            message = "Имя пользователя не может быть пустым";
+            logger.info("Имя пользователя не может быть пустым");
+            throw new BadRequestException(-1,"Имя пользователя не может быть пустым");
         } else if (Strings.isBlank(user.getPassword())){
-            message = "Пароль не может быть пустым";
+            logger.info("Пароль не может быть пустым");
+            throw new BadRequestException(-1,"Пароль не может быть пустым");
         } else if (Strings.isBlank(user.getEmail())){
-            message = "Email не может быть пустым";
+            logger.info("Email не может быть пустым");
+            throw new BadRequestException(-1,"Email не может быть пустым");
         } else if (!Pattern.compile(EMAIL_PATTERN)
                 .matcher(user.getEmail())
                 .matches()) {
-                message = "Адрес почты задан в неверном формате";
+            logger.info("Адрес почты задан в неверном формате");
+            throw new BadRequestException(-1,"Адрес почты задан в неверном формате");
             }
             else if (repository.findByEMail(user.getEmail()) != null) {
-                message = "Пользователь с таким адресом уже существует";
+            logger.info("Пользователь с таким адресом уже существует");
+            throw new BadRequestException(-1,"Пользователь с таким адресом уже существует");
             }
-            return message;
+            logger.info(" 2. user !active, ExpiryDate - expired ");
         }
 
+    public void validateToken(String token) {
+        TokenValidationRequest request = new TokenValidationRequest();
+        request.setSecret(environment.getProperty("google.recaptcha.secret"));
+        request.setResponse(token);
+        try {
+            TokenValidationResponse response =
+                    restTemplate.postForObject(Objects.requireNonNull(environment.getProperty("google.recaptcha.url")), request, TokenValidationResponse.class);
+            if (response == null || !response.isSuccess()) {
+                logger.info("Неверный токен "+ (response==null ?"ответ пустой":Arrays.toString(response.getError_codes())));
+                throw new BadRequestException(-1,"Неверный токен!");
+            }
+        } catch (HttpStatusCodeException e) {
+                logger.info("Возникло исключение во время проверки токена "+e.getResponseBodyAsString());
+                throw new BadRequestException(-1,"Не удалось проверить токен: " + e.getResponseBodyAsString());
+        }
+        logger.info("Проверка токена прошла успешно");
+    }
     public void delete(Integer id) {
         repository.deleteById(id);
     }
-
 }

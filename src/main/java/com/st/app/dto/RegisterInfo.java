@@ -5,7 +5,7 @@ public class RegisterInfo {
     private String name;
     private String email;
     private String password;
-    private String captcha;
+    private String token;
 
     public String getName() {
         return name;
@@ -31,11 +31,11 @@ public class RegisterInfo {
         this.password = password;
     }
 
-    public String getCaptcha() {
-        return captcha;
+    public String getToken() {
+        return token;
     }
 
-    public void setCaptcha(String captcha) {
-        this.captcha = captcha;
+    public void setToken(String token) {
+        this.token = token;
     }
 }

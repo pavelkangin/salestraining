@@ -5,7 +5,6 @@ import com.st.app.dao.RoleService;
 import com.st.app.dao.UserService;
 import com.st.app.dto.*;
 import com.st.app.model.User;
-import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,25 +133,23 @@ public class AuthenticationController {
     }
 
     @PostMapping("/api/register")
-    public DefaultResponse register(@RequestBody RegisterInfo info, HttpSession session){
+    public DefaultResponse register(@RequestBody RegisterInfo info){
         DefaultResponse response = new DefaultResponse();
         logger.info("User registration started: " + info.getName() + "  " + info.getEmail());
         User user = new User (info);
         user.setRole(roleService.getManager());
-        String message = userService.validate(user);
-        if (message ==null) {
-            userService.create(user);
-            //mailService.send(user.getEmail(), "Ваша регистрация прошла успешно!", "Активируйте аккаунт до"+ user.getExpiryDate());
-            response.setStatus(200);
-            response.setMessage("Registration Successfully Completed");
-            logger.info("User registration successful: " + info.getName() + "  " + info.getEmail());
-        }
-        else {
-            response.setStatus(400);
-            response.setMessage(message);
-            logger.info("User registration failed: " + info.getName() + "  " + info.getEmail());
-        }
+        userService.validateRegisterUser(user);
+        userService.validateToken(info.getToken());
+        userService.create(user);
+        String  emailText    = "<h2 style=\"color:DarkSlateBlue;\">Уважаемый " + user.getName() +"," +
+                "</h2> <p style=\"color:DarkSlateBlue;\"> Ваша регистрация прошла <b>успешно!</b>. " +
+                "<p style=\"color:DarkSlateBlue;\"> Активируйте аккаунт до " + user.getExpiryDate() + "." +
+                "<br><br><br> <i>С уважением,</i><br> Команда \"IMPROV\" <br><br>  </p>";
+        String emailSubject = "Регистрация!";
+        mailService.send(user.getEmail(), emailSubject, emailText);
+        response.setStatus(0);
+        response.setMessage("Registration Successfully Completed");
+        logger.info("User registration successful: " + info.getName() + "  " + info.getEmail());
         return response;
     }
-
 }
