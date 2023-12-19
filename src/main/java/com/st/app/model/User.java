@@ -43,7 +43,13 @@ public class User implements Serializable {
     @Column(name = "wrong_pass_count")
     private Integer wrongPassCount;
 
-    public User () {};
+    @Column(name = "avatar_file")
+    private String avatarFile;
+
+    @Column(name = "avatar_content_type")
+    private String avatarContentType;
+
+    public User () {}
 
     public User(RegisterInfo info) {
         this.email = info.getEmail();
@@ -110,8 +116,6 @@ public class User implements Serializable {
         this.resetCode = resetCode;
     }
 
-
-
     public Role getRole() {
         return role;
     }
@@ -134,5 +138,21 @@ public class User implements Serializable {
 
     public void setWrongPassCount(Integer wrongPassCount) {
         this.wrongPassCount = wrongPassCount;
+    }
+
+    public String getAvatarFile() {
+        return avatarFile;
+    }
+
+    public void setAvatarFile(String avatarFile) {
+        this.avatarFile = avatarFile;
+    }
+
+    public String getAvatarContentType() {
+        return avatarContentType;
+    }
+
+    public void setAvatarContentType(String avatarContentType) {
+        this.avatarContentType = avatarContentType;
     }
 }
