@@ -158,6 +158,7 @@ export class AudioRecordingService {
   }
 
 
-
-
+  resetStartTime() {
+    this.startTime=undefined;
+  }
 }

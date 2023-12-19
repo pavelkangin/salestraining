@@ -29,12 +29,13 @@
     </div>
     <div nz-row>
       <div nz-col nzSpan="24">
-        <nz-progress class="imp-progress" [nzPercent]="90" nzSize="small" [nzShowInfo]="false"></nz-progress>
+        <nz-progress class="imp-progress" [nzPercent]="getProgress()" nzSize="small" [nzShowInfo]="false"></nz-progress>
       </div>
     </div>
   </div>
-    <span class="imp-timer"> {{recordedTime}} </span>
-    <img [src]="isRecording ? 'assets/pause.svg' : 'assets/mic.svg'" class="imp-control-btn" (click)="startRecording()"/>
+    <span [ngClass]="getTimerClass()"> {{recordedTime}} </span>
+    <!--<img [src]="isRecording ? 'assets/pause.svg' : 'assets/mic_on.svg'" class="imp-control-btn" (click)="startRecording()"/>-->
+    <img [src]="getImg()" class="imp-control-btn" (click)="toggleStartPause()" (mouseenter)="hoverBtn(true)" (mouseleave)="hoverBtn(false)"/>
     <img src="assets/back.svg" class="imp-control-btn" (click)="showDesc()"/>
 </div>
 

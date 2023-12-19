@@ -83,6 +83,7 @@ export class ScriptDialogueComponent implements OnInit,AfterViewInit,OnDestroy {
 
   @Output() backEvent = new EventEmitter<any>();
   public showDesc(){
+    this.audioRecordingService.resetStartTime();
     this.stopRecording();
     this.backEvent.emit(this.script);
   }
@@ -164,10 +165,82 @@ export class ScriptDialogueComponent implements OnInit,AfterViewInit,OnDestroy {
     }
   }
 
-
-
   ngOnDestroy(): void {
     this.abortRecording();
   }
 
+  timeoutAnswer=99;
+  period=50;
+  intv:any;
+
+  toggleStartPause() {
+    if (this.started){
+      if (this.paused){
+        this.paused=false;
+      }
+      else {
+        this.paused=true;
+      }
+    }
+    else {
+      this.started=true;
+      this.paused=false;
+      this.period=50;
+      this.timeoutAnswer=99;
+
+      this.startTimer();
+    }
+    this.startRecording();
+
+
+  }
+
+
+  startTimer(){
+    this.intv=  setInterval(()=>{
+      if (!this.paused){
+        this.timeoutAnswer--;
+        if (this.timeoutAnswer<=0){
+          this.timeoutAnswer=0;
+          clearInterval(this.intv);
+        }
+      }
+    },this.period);
+  }
+
+  // 500 / 100
+
+  getImg() {
+    if (this.started){
+      if (this.paused){
+        return this.hover ? 'assets/mic.svg' : 'assets/mic_on.svg';
+      }
+      else {
+        return this.hover ? 'assets/pause_on.svg' : 'assets/pause.svg';
+      }
+    }
+    else {
+      return this.hover ? 'assets/mic.svg' : 'assets/mic_on.svg';
+    }
+  }
+
+  getTimerClass() {
+    if (this.started) {
+      if (this.paused) {
+        return 'imp-timer imp-timer-inactive'
+      }
+      else return 'imp-timer';
+    }
+    else return 'imp-timer imp-timer-inactive'
+  }
+
+  getProgress() {
+    return this.timeoutAnswer;
+  }
+
+  hover=false;
+
+  hoverBtn(b: boolean) {
+    this.hover=b;
+  }
 }
