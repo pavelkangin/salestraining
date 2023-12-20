@@ -38,14 +38,14 @@ public class DialogueController {
     public DialogueEntryResponse fetch(@RequestBody DialogueProgressInfo info, HttpSession session) {
         //TODO return next (or first) dialogue entry as text
         DialogueEntryResponse resp = new DialogueEntryResponse();
-//        User user = (User) session.getAttribute("user");
-//
-//        if (user == null) {
-//            resp.setStatus(-1);
-//            resp.setMessage("Пользователь не аутентифицирован!");
-//            logger.info("DC fetch. empty user in session, not authenticated");
-//            return resp;
-//        }
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            resp.setStatus(-1);
+            resp.setMessage("Пользователь не аутентифицирован!");
+            logger.info("DC fetch. empty user in session, not authenticated");
+            return resp;
+        }
 
         if (info.getSentenceId() == 0) {
             List<DialogueEntry> entry = dialogueService.getFirstDialogueEntry(info.getScriptId());
