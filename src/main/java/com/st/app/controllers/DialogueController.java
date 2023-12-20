@@ -4,6 +4,8 @@ import com.st.app.dao.DialogueService;
 import com.st.app.dao.RecognitionService;
 import com.st.app.dao.SynthService;
 import com.st.app.dto.*;
+import com.st.app.model.DialogueEntry;
+import com.st.app.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 public class DialogueController {
@@ -32,9 +35,44 @@ public class DialogueController {
     Logger logger = LoggerFactory.getLogger(DialogueController.class);
 
     @PostMapping("/api/dialogue/fetch")
-    public DialogueEntryResponse fetch(@RequestBody DialogueProgressInfo info, HttpSession session){
+    public DialogueEntryResponse fetch(@RequestBody DialogueProgressInfo info, HttpSession session) {
         //TODO return next (or first) dialogue entry as text
-        return null;
+        DialogueEntryResponse resp = new DialogueEntryResponse();
+//        User user = (User) session.getAttribute("user");
+//
+//        if (user == null) {
+//            resp.setStatus(-1);
+//            resp.setMessage("Пользователь не аутентифицирован!");
+//            logger.info("DC fetch. empty user in session, not authenticated");
+//            return resp;
+//        }
+
+        if (info.getSentenceId() == 0) {
+            List<DialogueEntry> entry = dialogueService.getFirstDialogueEntry(info.getScriptId());
+            if (entry.isEmpty()) {
+                logger.info("Empty Script, scriptId is " + info.getScriptId());
+                resp.setStatus(-1);
+                resp.setMessage("Can't find sentence");
+                return resp;
+            } else {
+                resp.setEntry(entry.get(0));
+                resp.setHasNext(entry.get(1) != null);
+            }
+        }
+
+        if (info.getSentenceId() != 0) {
+            List<DialogueEntry> entry = dialogueService.getDialogueEntry(info.getScriptId(), info.getSentenceId());
+            if (entry.isEmpty()) {
+                logger.info("Empty Script, scriptId is " + info.getScriptId() + "sentenceId is " + info.getSentence());
+                resp.setStatus(-1);
+                resp.setMessage("Can't find next sentence");
+                return resp;
+            } else {
+                resp.setEntry(entry.get(0));
+                resp.setHasNext(entry.get(1) != null);
+            }
+        }
+        return resp;
     }
 
     @PostMapping("/api/dialogue/synth")
