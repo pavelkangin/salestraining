@@ -8,7 +8,7 @@ import java.util.List;
 public class ScriptListResponse extends DefaultResponse{
 
     private List<Script> data=new ArrayList<>();
-    private int totalRows;
+    private long totalRows;
 
     public List<Script> getData() {
         return data;
@@ -18,11 +18,11 @@ public class ScriptListResponse extends DefaultResponse{
         this.data = data;
     }
 
-    public int getTotalRows() {
+    public long getTotalRows() {
         return totalRows;
     }
 
-    public void setTotalRows(int totalRows) {
+    public void setTotalRows(long totalRows) {
         this.totalRows = totalRows;
     }
 }
