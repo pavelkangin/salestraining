@@ -27,20 +27,17 @@ import { error } from '@ant-design/icons-angular';
     NzButtonModule,
     NzCheckboxModule,
     AlertComponent,
-    
+
   ],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.css'
 })
 
-    
+
 export class RegisterFormComponent implements OnInit  {
 
-  public alert=console.error(error);
-  @Input('alertError')
-  set alertError(alertError: any) {
-    this.alert = alertError;
-  } 
+
+  errorTitle:any;
 
   validateForm: FormGroup<{
     name: FormControl<string>;
@@ -56,7 +53,7 @@ export class RegisterFormComponent implements OnInit  {
 
    isDisables: boolean = false;
    // http://st.iptp.net/api/register
-  
+
   submitForm(): void {
     if (this.validateForm.valid) {
       this.isDisables=false;
@@ -68,28 +65,25 @@ export class RegisterFormComponent implements OnInit  {
             let resp=data as RegisterInfo
             if (resp.status>=0){
               localStorage.setItem('UserInfo', JSON.stringify(data));
-              window.location.hash='#/training'; 
+              window.location.hash='#/training';
             }
             else{
               console.error('Ой, что-то сломалось', error);
               this.isDisables= true;
-                   
+
             }
-            
+
           },
           error:error => {
             console.error('Ошибка Сервера', error);
             this.isDisables= true;
-           
+            this.errorTitle="Ошибка Сервера";
           }
         })
       }, error => {
-        // get error, e.g. if key is invalid
-
         console.log('captcha error: '+error);
-        
         this.isDisables= true;
-        
+        this.errorTitle="Ошибка captcha";
       })
 
     } else {
@@ -100,11 +94,11 @@ export class RegisterFormComponent implements OnInit  {
           this.isDisables = false;
         }
       });
-      
+
     }
 
   }
-  
+
   constructor(private fb: NonNullableFormBuilder,
               private recaptcha3: NgRecaptcha3Service,
               private http: HttpClient) {}
@@ -114,11 +108,11 @@ export class RegisterFormComponent implements OnInit  {
       // status: success/error
       // success - script is loaded and greaptcha is ready
       // error - script is not loaded
-      console.log(status)            
+      console.log(status)
     })
 
 
-  
+
   }
 
   public ngOnDestroy() {

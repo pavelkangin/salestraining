@@ -1,10 +1,13 @@
-<div *ngIf="show" class="alert" >
+<div class="alert">
+  <div *ngIf="show">
     <nz-alert
+      nzCloseable
+      (nzOnClose)="closeAlert()"
       nzType="error"
-      nzMessage="Ошибка"
+      [nzMessage]="title"
       nzShowIcon
-      
-      ></nz-alert>
+    ></nz-alert>
+  </div>
 </div>
 
-      
+

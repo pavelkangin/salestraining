@@ -17,16 +17,33 @@ import { RegisterFormComponent } from '../register-form/register-form.component'
     CommonModule,
     RegisterFormComponent
   ],
-  
+
 })
 
 export class AlertComponent {
   public alertError=String;
   public show = false;
+  public title='';
   @Input('showComponent')
   set showComponent(showComponent: any) {
     this.show = showComponent;
-  } 
+    /*setTimeout(()=>{
+      this.show=false;
+      this.title='';
+      console.log('closing popup')
+    },50000)*/
+  }
+
+  @Input('errorTitle')
+  set errorTitle(errorTitle: any) {
+    this.title = errorTitle;
+  }
+
+
   constructor() {}
+
+  closeAlert() {
+    console.log('close')
+  }
 }
 

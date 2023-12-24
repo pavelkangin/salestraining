@@ -24,8 +24,8 @@
     <label class="change-languages">Русский</label>
   </header>
 
-  <app-alert [showComponent]=isDisables [showComponent]=alertError></app-alert>
-  
+  <app-alert [showComponent]=isDisables [errorTitle]="errorTitle"></app-alert>
+
 <main class="register-form-container">
   <form nz-form [formGroup]="validateForm" class="register-form" (ngSubmit)="submitForm()">
     <nz-form-item>
@@ -39,24 +39,24 @@
           <input class="register-input" type="text" nz-input formControlName="name" placeholder="Введите имя" />
       </nz-form-control>
     </nz-form-item>
-     
+
     <nz-form-item class="register-form-item">
       <nz-form-control class="register-form-error" nzErrorTip="Пожалуйста, введите email!">
           <label class="register-input-title">Email</label>
           <input class="register-input" type="email" nz-input formControlName="email" placeholder="Введите email" />
       </nz-form-control>
     </nz-form-item>
-        
+
     <nz-form-item class="register-form-item">
       <nz-form-control class="register-form-error" nzErrorTip="Пожалуйста, введите пароль!">
           <label class="register-input-title">Пароль</label>
           <input class="register-input" type="password" nz-input formControlName="password" placeholder="Введите пароль" />
       </nz-form-control>
     </nz-form-item>
-   
+
     <button class="register-button" nz-button [disabled]="isDisables" [nzType]="'primary'" type="submit"
     ng-disabled = "enableDisableButton" ng-click="enableDisableButton=false">Зарегистирироваться</button>
-    
+
     <a class="url-to-login" href="login">Уже есть аккаунт?</a>
   </form>
 </main>
