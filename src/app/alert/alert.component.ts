@@ -27,11 +27,11 @@ export class AlertComponent {
   @Input('showComponent')
   set showComponent(showComponent: any) {
     this.show = showComponent;
-    /*setTimeout(()=>{
+    setTimeout(()=>{
       this.show=false;
       this.title='';
       console.log('closing popup')
-    },50000)*/
+    },10000)
   }
 
   @Input('errorTitle')
@@ -43,7 +43,7 @@ export class AlertComponent {
   constructor() {}
 
   closeAlert() {
-    console.log('close')
+    this.show=false;
   }
 }
 
