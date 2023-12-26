@@ -1,20 +1,56 @@
-<form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
-  <nz-form-item>
-    <nz-form-control nzErrorTip="Please input your email!">
-      <nz-input-group nzPrefixIcon="mail">
-        <input type="text" nz-input formControlName="email" placeholder="E-mail" />
-      </nz-input-group>
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-control nzErrorTip="Please input your Password!">
-      <nz-input-group nzPrefixIcon="lock">
-        <input type="password" nz-input formControlName="password" placeholder="Password" />
-      </nz-input-group>
-    </nz-form-control>
-  </nz-form-item>
+<header class="header">
+  <svg xmlns="http://www.w3.org/2000/svg" width="46" height="36" viewBox="0 0 46 36" fill="none">
+    <g clip-path="url(#clip0_419_408)">
+      <path d="M11.4351 35.0134V30.4717C11.4351 30.4717 -2.05326 28.8001 0.803479 16.0961C2.50778 8.51289 6.38711 5.82206 12.2467 5.02297C24.1849 3.40032 35.7174 16.8708 26.8631 27.2671C23.3652 31.3768 14.9898 31.124 14.9898 31.124C13.6994 32.7466 11.4432 35.0134 11.4432 35.0134H11.4351Z" stroke="#292C38" stroke-miterlimit="10"/>
+      <path d="M34.9706 30.121V25.5792C34.9706 25.5792 48.459 23.8995 45.6022 11.1955C43.8979 3.62044 40.0186 0.929614 34.1672 0.13052C22.2289 -1.48398 10.6964 11.9783 19.5507 22.3747C23.0486 26.4843 31.424 26.2315 31.424 26.2315C32.7144 27.8542 34.9706 30.121 34.9706 30.121Z" fill="#4A8BDF"/>
+    </g>
+    <defs>
+      <clipPath id="clip0_419_408">
+        <rect width="46" height="36" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
 
-  <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'">Log in</button>
-  Or
-  <a href="register">register now!</a>
-</form>
+  <svg xmlns="http://www.w3.org/2000/svg" width="91" height="29" viewBox="0 0 91 29" fill="none">
+    <path d="M4.45593 22.0361H2.64941V3.73486H4.45593V22.0361Z" fill="#292C38"/>
+    <path d="M23.0028 3.73486H24.9056V22.0361H23.0991V6.31318L23.2918 7.12041L17.788 19.4939H16.5114L10.9834 7.37342L11.1761 6.31318V22.024H9.36963V3.73486H11.2725L17.1497 16.9517L23.0028 3.73486Z" fill="#292C38"/>
+    <path d="M29.4338 3.73486H31.2403V22.0361H29.4338V3.73486ZM30.7586 13.2529H36.6117C37.3223 13.2529 37.9485 13.0843 38.5025 12.759C39.0445 12.4337 39.466 11.9758 39.7671 11.3855C40.0682 10.7951 40.2127 10.1204 40.2127 9.34932C40.2127 8.57824 40.0682 7.87944 39.7671 7.28908C39.466 6.69872 39.0445 6.24089 38.5025 5.91559C37.9606 5.59028 37.3343 5.42161 36.6117 5.42161H30.7586V3.73486H36.5154C37.6113 3.73486 38.5627 3.96378 39.3937 4.43366C40.2247 4.90354 40.863 5.55414 41.3207 6.39751C41.7783 7.24089 42.0072 8.22884 42.0072 9.33727C42.0072 10.4457 41.7783 11.4216 41.3207 12.265C40.863 13.1084 40.2247 13.759 39.3937 14.2288C38.5627 14.6987 37.5993 14.9276 36.5154 14.9276H30.7586V13.2409V13.2529Z" fill="#4A8BDF"/>
+    <path d="M45.2229 3.72286H47.0294V22.0361H45.2229V3.72286ZM46.3429 12.6024H52.5814C53.2559 12.6024 53.858 12.4578 54.3759 12.1566C54.8938 11.8554 55.2912 11.4337 55.5682 10.8915C55.8452 10.3494 55.9897 9.71081 56.0018 8.99997C56.0018 8.28913 55.8572 7.66262 55.5802 7.10841C55.3032 6.55419 54.9058 6.14455 54.3879 5.84335C53.8701 5.54214 53.2679 5.39756 52.5814 5.39756H46.3429V3.71082H52.4851C53.5449 3.71082 54.4722 3.92768 55.2671 4.36142C56.074 4.79515 56.6882 5.42166 57.1338 6.21684C57.5794 7.01202 57.7962 7.93973 57.7962 8.98792C57.7962 10.0361 57.5794 10.9638 57.1338 11.759C56.6882 12.5542 56.074 13.1807 55.2671 13.6144C54.4602 14.0482 53.5329 14.265 52.4851 14.265H46.3429V12.5783V12.6024ZM52.2081 13.7229L53.8821 13.1445L58.567 22.0241H56.3992L52.2081 13.7229Z" fill="#4A8BDF"/>
+    <path d="M64.083 21.4337C63.1195 20.9036 62.3969 20.1325 61.8911 19.1325C61.3852 18.1325 61.1323 16.9036 61.1323 15.4819V10.3012C61.1323 8.8795 61.3852 7.66263 61.8911 6.65058C62.3969 5.63854 63.1315 4.8795 64.083 4.34938C65.0464 3.81926 66.2026 3.5542 67.5635 3.5542C68.9244 3.5542 70.0806 3.81926 71.0441 4.34938C72.0075 4.8795 72.7301 5.65058 73.236 6.65058C73.7418 7.66263 73.9947 8.8795 73.9947 10.3012V15.4819C73.9947 16.9036 73.7418 18.1205 73.236 19.1325C72.7301 20.1446 71.9955 20.9036 71.0441 21.4337C70.0806 21.9638 68.9244 22.2289 67.5635 22.2289C66.2026 22.2289 65.0464 21.9638 64.083 21.4337ZM70.0565 19.9518C70.743 19.5662 71.2729 19 71.6342 18.253C71.9955 17.506 72.1761 16.6144 72.1761 15.5662V10.2048C72.1761 9.15661 71.9955 8.26504 71.6342 7.51805C71.2729 6.77107 70.743 6.2048 70.0565 5.81926C69.37 5.43372 68.527 5.2289 67.5635 5.2289C66.6 5.2289 65.757 5.42167 65.0705 5.81926C64.384 6.21685 63.8541 6.77107 63.4928 7.51805C63.1315 8.26504 62.9509 9.15661 62.9509 10.2048V15.5662C62.9509 16.6144 63.1315 17.506 63.4928 18.253C63.8541 19 64.384 19.5662 65.0705 19.9518C65.757 20.3373 66.6 20.5422 67.5635 20.5422C68.527 20.5422 69.37 20.3494 70.0565 19.9518Z" fill="#4A8BDF"/>
+    <path d="M76.2466 3.73486H78.1615L83.4365 19.4698L88.7115 3.73486H90.6264L84.2916 22.0361H82.6055L76.2707 3.73486H76.2466Z" fill="#292C38"/>
+  </svg>
+
+  <label class="change-languages">Русский</label>
+</header>
+
+<!--<app-alert [showComponent]=isDisables [errorTitle]="errorTitle"></app-alert>-->
+
+<main class="register-form-container">
+  <form nz-form [formGroup]="validateForm" class="register-form" (ngSubmit)="submitForm()">
+    <nz-form-item>
+      <h2 class="register-title">
+        Добро пожаловать в IM<span style="color:#4A8BDF">PRO</span>V
+      </h2>
+    </nz-form-item>
+
+    <nz-form-item class="register-form-item">
+      <nz-form-control class="register-form-error" nzErrorTip="Пожалуйста, введите email!">
+        <label class="register-input-title">Email</label>
+        <input class="register-input" type="email" nz-input formControlName="email" placeholder="Введите email" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item class="register-form-item">
+      <nz-form-control class="register-form-error" nzErrorTip="Пожалуйста, введите пароль!">
+        <label class="register-input-title">Пароль</label>
+        <a class="url-to-login" style="padding-top:0;float:right;display: inline-block;" href="#/reset">Забыли пароль?</a>
+        <input class="register-input" type="password" nz-input formControlName="password" placeholder="Введите пароль" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item class="register-form-item">
+      <button class="register-button"  nz-button [nzType]="'primary'" type="submit">Войти</button>
+      <a class="url-to-login" style="text-align: center;display: block;width: 100%" href="#/register">Зарегистрироваться</a>
+    </nz-form-item>
+
+  </form>
+</main>
