@@ -14,13 +14,15 @@ import java.util.List;
 public interface DialogueRepository  extends JpaRepository<DialogueEntry, Integer> {
 
     @Query(
-            value = "select * from dialogues where script_id=(:scriptId) and id>(:sentenceId) order by id ASC limit 2",
+            value = "select d.* from dialogues d inner join scripts s " +
+                    "on s.id=d.script_id where d.script_id=(:scriptId) and d.id>(:sentenceId) order by id ASC limit 2",
             nativeQuery = true
     )
     List<DialogueEntry> findDialogueEntry(@Param("scriptId") int scriptId, @Param("sentenceId") int sentenceId);
 
     @Query(
-            value = "select * from dialogues where script_id=(:scriptId) order by id ASC limit 2",
+            value = "select d.* from dialogues d inner join scripts s " +
+                    "on s.id=d.script_id where d.script_id=(:scriptId) order by id ASC limit 2",
             nativeQuery = true
     )
     List<DialogueEntry> findFirstDialogueEntry(@Param("scriptId") int scriptId);

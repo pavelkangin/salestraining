@@ -29,6 +29,12 @@ public class ScriptService {
     public ScriptInfo validateScriptById(int scriptId) {
         //implement fetching scripts by Id
         ScriptInfo scriptInfo = new ScriptInfo();
+        if (scriptId <= 0) {
+            logger.info("wrong script ID ");
+            scriptInfo.setMessage("script не найден!");
+            return scriptInfo;
+        }
+
         Script script = repository.findScriptById(scriptId);
 
         if (script == null) {

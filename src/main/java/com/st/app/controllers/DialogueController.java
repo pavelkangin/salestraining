@@ -68,7 +68,7 @@ public class DialogueController {
         }
         else {
             resp.setStatus(-1);
-            resp.setMessage("Can't find Script");
+            resp.setMessage(scriptInfo.getMessage());
         }
         return resp;
     }
