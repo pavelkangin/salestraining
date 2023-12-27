@@ -22,18 +22,12 @@ public class DialogueService {
 
     Logger logger = LoggerFactory.getLogger(DialogueService.class);
 
-    public Page<DialogueEntry> fetch(Script script, PagingInfo info){
-        //TODO implement fetching dialogue entries depending on started script and paging info
-        return null;
+    public List<DialogueEntry> fetch(Script script, int sentenceId){
+        //implement fetching dialogue entries depending on started script and sentence info
+        if (sentenceId == 0) {
+            return repository.findFirstDialogueEntry(script.getId());
+        } else {
+            return repository.findDialogueEntry(script.getId(),sentenceId);
+        }
     }
-
-   // public DialogueEntryResponse getFirstEntry(int scriptId) {
-   public List<DialogueEntry> getFirstDialogueEntry(int scriptId) {
-       return repository.findFirstDialogueEntry(scriptId);
-    }
-
-    public List<DialogueEntry> getDialogueEntry(int scriptId, int sentenceId) {
-        return repository.findDialogueEntry(scriptId,sentenceId);
-    }
-
 }

@@ -1,6 +1,7 @@
 package com.st.app.dao;
 
 import com.st.app.dto.PagingInfo;
+import com.st.app.dto.ScriptInfo;
 import com.st.app.model.Script;
 import com.st.app.repository.ScriptRepository;
 import org.slf4j.Logger;
@@ -23,6 +24,20 @@ public class ScriptService {
         //TODO implement fetching scripts with paging, assume page size is 20 rows
 
         return null;
+    }
+
+    public ScriptInfo validateScriptById(int scriptId) {
+        //implement fetching scripts by Id
+        ScriptInfo scriptInfo = new ScriptInfo();
+        Script script = repository.findScriptById(scriptId);
+
+        if (script == null) {
+            logger.info(" script not found ");
+            scriptInfo.setMessage("script не найден!");
+            return scriptInfo;
+        }
+        scriptInfo.setScript(script);
+        return scriptInfo;
     }
 
 }

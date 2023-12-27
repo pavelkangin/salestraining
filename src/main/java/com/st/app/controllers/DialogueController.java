@@ -2,9 +2,11 @@ package com.st.app.controllers;
 
 import com.st.app.dao.DialogueService;
 import com.st.app.dao.RecognitionService;
+import com.st.app.dao.ScriptService;
 import com.st.app.dao.SynthService;
 import com.st.app.dto.*;
 import com.st.app.model.DialogueEntry;
+import com.st.app.model.Script;
 import com.st.app.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,45 +34,41 @@ public class DialogueController {
     @Autowired
     private RecognitionService recognitionService;
 
+    @Autowired
+    private ScriptService scriptService;
+
     Logger logger = LoggerFactory.getLogger(DialogueController.class);
 
     @PostMapping("/api/dialogue/fetch")
     public DialogueEntryResponse fetch(@RequestBody DialogueProgressInfo info, HttpSession session) {
-        //TODO return next (or first) dialogue entry as text
+        // return next (or first) dialogue entry as text
         DialogueEntryResponse resp = new DialogueEntryResponse();
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
+            logger.info("DC fetch. empty user in session, not authenticated");
             resp.setStatus(-1);
             resp.setMessage("Пользователь не аутентифицирован!");
-            logger.info("DC fetch. empty user in session, not authenticated");
             return resp;
         }
 
-        if (info.getSentenceId() == 0) {
-            List<DialogueEntry> entry = dialogueService.getFirstDialogueEntry(info.getScriptId());
+        ScriptInfo scriptInfo = scriptService.validateScriptById(info.getScriptId());
+
+        if (scriptInfo.getScript() != null) {
+            List<DialogueEntry> entry = dialogueService.fetch(scriptInfo.getScript(), info.getSentenceId());
             if (entry.isEmpty()) {
-                logger.info("Empty Script, scriptId is " + info.getScriptId());
+                logger.info("Empty Script, scriptId is " + info.getScriptId() + "sentenceId is " + info.getSentence());
                 resp.setStatus(-1);
                 resp.setMessage("Can't find sentence");
                 return resp;
             } else {
                 resp.setEntry(entry.get(0));
-                resp.setHasNext(entry.get(1) != null);
+                resp.setHasNext(entry.size() > 1);
             }
         }
-
-        if (info.getSentenceId() != 0) {
-            List<DialogueEntry> entry = dialogueService.getDialogueEntry(info.getScriptId(), info.getSentenceId());
-            if (entry.isEmpty()) {
-                logger.info("Empty Script, scriptId is " + info.getScriptId() + "sentenceId is " + info.getSentence());
-                resp.setStatus(-1);
-                resp.setMessage("Can't find next sentence");
-                return resp;
-            } else {
-                resp.setEntry(entry.get(0));
-                resp.setHasNext(entry.get(1) != null);
-            }
+        else {
+            resp.setStatus(-1);
+            resp.setMessage("Can't find Script");
         }
         return resp;
     }
