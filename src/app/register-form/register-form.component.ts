@@ -1,4 +1,4 @@
-import { Component, ErrorHandler, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Injectable, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -12,6 +12,7 @@ import { NgRecaptcha3Service } from 'ng-recaptcha3';
 import  {HttpClient } from "@angular/common/http";
 import { AlertComponent } from '../alert/alert.component';
 import { error } from '@ant-design/icons-angular';
+import { RestOutline } from '@ant-design/icons-angular/icons';
 
 @Component({
   selector: 'app-register-form',
@@ -30,7 +31,8 @@ import { error } from '@ant-design/icons-angular';
 
   ],
   templateUrl: './register-form.component.html',
-  styleUrl: './register-form.component.css'
+  styleUrl: './register-form.component.css',
+ 
 })
 
 
@@ -50,17 +52,29 @@ export class RegisterFormComponent implements OnInit  {
     password: ['', [Validators.required]],
     token:['']
   });
+    isDisabled = false;
+    closeAlert=false;
+    
+  //окно ошибки, повторное появление 
+  public showErrorPopUp() {
+    this.isDisabled=false;
+    this.closeAlert=false;
+    setTimeout(() => {
+    // set all the values..
+    this.isDisabled=false;
+    this.closeAlert=true;
+    }, 10);
+  };
 
-   isDisables: boolean = false;
-   // http://st.iptp.net/api/register
+
 
   submitForm(): void {
     if (this.validateForm.valid) {
-      this.isDisables=false;
+      this.isDisabled=true;
       console.log('submit', this.validateForm.value);
       this.recaptcha3.getToken({ action: 'registerAction' }).then(token => {
         console.log(token)
-        this.http.post('000http://st.iptp.net/api/register',this.validateForm.value).subscribe({
+        this.http.post('http://st.iptp.net/api/register',this.validateForm.value).subscribe({
           next:data => {
             let resp=data as RegisterInfo
             if (resp.status>=0){
@@ -68,35 +82,30 @@ export class RegisterFormComponent implements OnInit  {
               window.location.hash='#/training';
             }
             else{
-              console.error('Ой, что-то сломалось', error);
-              this.isDisables= true;
-
+              console.error('server unavailable', error);
+              this.errorTitle ='Сервер недоступен'
+              this.showErrorPopUp();
             }
-
           },
           error:error => {
-            console.error('Ошибка Сервера', error);
-            this.isDisables= true;
+            console.error('server error', error);
             this.errorTitle="Ошибка Сервера";
+            this.showErrorPopUp();
           }
         })
       }, error => {
         console.log('captcha error: '+error);
-        this.isDisables= true;
         this.errorTitle="Ошибка captcha";
+        this.showErrorPopUp();
       })
-
     } else {
       Object.values(this.validateForm.controls).forEach(control => {
         if (control.invalid) {
           control.markAsDirty();
           control.updateValueAndValidity({ onlySelf: true });
-          this.isDisables = false;
         }
       });
-
     }
-
   }
 
   constructor(private fb: NonNullableFormBuilder,
@@ -109,10 +118,8 @@ export class RegisterFormComponent implements OnInit  {
       // success - script is loaded and greaptcha is ready
       // error - script is not loaded
       console.log(status)
+      
     })
-
-
-
   }
 
   public ngOnDestroy() {
@@ -124,7 +131,4 @@ export interface RegisterInfo{
   status:number;
   message:string;
 }
-
-
-
 

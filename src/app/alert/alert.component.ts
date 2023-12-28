@@ -7,6 +7,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { RegisterFormComponent } from '../register-form/register-form.component';
 
 
+
 @Component({
   selector: 'app-alert',
   standalone: true,
@@ -35,8 +36,10 @@ export class AlertComponent {
   }
 
   @Input('errorTitle')
+
   set errorTitle(errorTitle: any) {
     this.title = errorTitle;
+   
   }
 
 
@@ -44,6 +47,6 @@ export class AlertComponent {
 
   closeAlert() {
     this.show=false;
+    console.log('alert was closed');
   }
 }
-

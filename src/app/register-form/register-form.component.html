@@ -24,7 +24,7 @@
     <label class="change-languages">Русский</label>
   </header>
 
-  <app-alert [showComponent]=isDisables [errorTitle]="errorTitle"></app-alert>
+<app-alert [showComponent]='closeAlert' [errorTitle]="errorTitle"></app-alert>
 
 <main class="register-form-container">
   <form nz-form [formGroup]="validateForm" class="register-form" (ngSubmit)="submitForm()">
@@ -54,11 +54,8 @@
       </nz-form-control>
     </nz-form-item>
 
-    <button class="register-button" nz-button [disabled]="isDisables" [nzType]="'primary'" type="submit"
-    ng-disabled = "enableDisableButton" ng-click="enableDisableButton=false">Зарегистирироваться</button>
+    <button class="register-button" nz-button [disabled]="isDisabled" [nzType]="'primary'"  type="submit">Зарегистирироваться</button>
 
     <a class="url-to-login" href="login">Уже есть аккаунт?</a>
   </form>
 </main>
-
-
